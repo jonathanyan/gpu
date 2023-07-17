@@ -1,0 +1,2211 @@
+* command 
+space m x c
+* Two Pointers Done 
+**  11 Container With Most Water
+#+BEGIN_SRC c++
+class Solution {
+public:
+    int maxArea(vector<int>& height) {
+        int retArea = 0;
+        int i = 0, j= height.size()-1;
+        while (i<j) {
+            retArea = max(retArea, (j-i) * min(height[i], height[j]));
+            if (height[i] < height[j]) {
+                int k=1;
+                while (i+k<=j && height[i]>= height[i+k]) k++;
+                i+=k;
+            } else {
+                int k=1;
+                while (i<=j-k && height[j]>= height[j-k]) k++;
+                j-=k;
+            }
+        }
+        return retArea;
+    }
+};
+#+END_SRC
+
+**  167 Two Sum II - Input arrary is sorted 
+#+BEGIN_SRC c++
+class Solution {
+public:
+    vector<int> twoSum(vector<int>& numbers, int target) {
+        int i = 0, j= numbers.size()-1;
+        while (i<j) {
+            if (numbers[i] + numbers[j] == target) {
+                return vector<int>{i+1, j+1};
+            } else if (numbers[i] + numbers[j] < target) {
+                i++;
+            } else {
+                j--;
+            }
+        }
+        return vector<int>{0,0};
+    }
+};
+#+END_SRC
+
+**  977 Squares of a Sorted Array 
+#+BEGIN_SRC c++
+class Solution {
+public:
+    vector<int> sortedSquares(vector<int>& nums) {
+        int i=0;
+        while (i<nums.size() && nums[i] < 0) i++;
+        int j=i;
+        i = j -1;
+        vector<int> ret;
+        while (i>=0 || j<nums.size()) {
+            int left = i<0 ? INT_MAX : nums[i] * nums[i];
+            int right = j>=nums.size() ? INT_MAX : nums[j] * nums[j];
+            if (left > right) {
+                ret.push_back(right);
+                j++;
+            } else {
+                ret.push_back(left);
+                i--;
+            }
+        }
+        return ret;
+    }
+};
+#+END_SRC
+
+
+* Hash Table Done  
+**  1 Two Sum 
+#+BEGIN_SRC c++
+class Solution {
+public:
+    vector<int> twoSum(vector<int>& nums, int target) {
+        unordered_map<int, int> map_num;
+        for (int i=0; i<nums.size(); i++) {
+            if (map_num.find(target - nums[i]) != map_num.end()) {
+                return vector<int>{map_num[target-nums[i]], i};
+            }
+            map_num[nums[i]] = i;
+        }
+        return vector<int>{-1, -1};
+    }
+};
+#+END_SRC
+
+**  560 Subarray Sum Equals K 
+#+BEGIN_SRC c++
+class Solution {
+public:
+    int subarraySum(vector<int>& nums, int k) {
+        map<int, int> map_num;
+        int j = 0;
+        map_num[j]  = 1;
+        int ret = 0;
+        for (auto n : nums) {
+            j+=n;
+            if (map_num.find(j-k) != map_num.end()) {
+                ret += map_num[j-k];
+            }
+            if (map_num.find(j) == map_num.end()) {
+                map_num[j] = 1;
+            } else {
+                map_num[j]++;
+            }
+        }
+       
+        return ret;
+    }
+};
+#+END_SRC
+
+
+* Binary Search 
+**  35 Search Insert Postion (upper_bound) 
+#+BEGIN_SRC c++
+class Solution {
+public:
+    int searchInsert(vector<int>& nums, int target) {
+        int i=0, j=nums.size();
+        while (i<j) {
+            int mid = i + (j-i)/2;
+            if (target>nums[mid]) {
+                i = mid+1;
+            } else {
+                j = mid;
+            }
+        }
+        return j;
+    }
+};
+#+END_SRC
+
+**  34 Find First and Last Postition of Element in sorted Array  (upper_bound)
+#+BEGIN_SRC c++
+class Solution {
+public:
+    vector<int> searchRange(vector<int>& nums, int target) {
+        return {firstPos(nums, target), lastPos(nums, target)};
+    }
+private:
+    int firstPos(vector<int>& nums, int target) {
+        int left = 0, right = nums.size();
+        while (left < right) {
+            int mid = left + (right - left) / 2;
+            if (target > nums[mid]) {
+                left = mid + 1;
+            } else {
+                right = mid;
+            }
+        }
+        return right == nums.size() || nums[right] != target ? -1 : right;
+    }
+    int lastPos(vector<int>& nums, int target) {
+        int left = 0, right = nums.size();
+        while (left < right) {
+            int mid = left + (right - left) / 2;
+            if (target < nums[mid]) {
+                right = mid;
+            } else {
+                left = mid + 1;
+            }
+        }
+        return left == 0 || nums[left-1] != target ? -1 : left-1;
+    }
+};
+#+END_SRC
+
+**  704 Binary Search  (upper_bound)
+#+BEGIN_SRC c++
+class Solution {
+public:
+    int search(vector<int>& nums, int target) {
+        int left = 0, right = nums.size();
+        while (left < right) {
+            int mid = left + (right - left) / 2;
+            if (target > nums[mid]) {
+                left = mid + 1;
+            } else {
+                right = mid;
+            }
+        }
+        return right == nums.size() || nums[right] != target ? -1 : right;
+    }
+};
+#+END_SRC
+
+**  981 Time Based Key-Value Store  (upper_bound)
+#+BEGIN_SRC c++
+class TimeMap {
+public:
+    /** Initialize your data structure here. */
+    TimeMap() {
+        
+    }
+    
+    void set(string key, string value, int timestamp) {
+        s_[key].emplace(timestamp, value);
+    }
+    
+    string get(string key, int timestamp) {
+        auto it_key = s_.find(key);
+        if (it_key == s_.end()) return "";
+        auto it_time = it_key->second.upper_bound(timestamp);
+        if (it_time == it_key->second.begin() ) return "";
+        return prev(it_time)->second;
+    }
+private:
+    unordered_map<string, map<int, string>> s_;
+};
+#+END_SRC
+
+**  xxx 
+#+BEGIN_SRC c++
+#+END_SRC
+
+**  xxx 
+#+BEGIN_SRC c++
+#+END_SRC
+
+
+* Divide and Conquer Done 
+**  169 Majity Element 
+#+BEGIN_SRC c++
+class Solution {
+public:
+    int majorityElement(vector<int>& nums) {
+        unordered_map<int, int> counter;
+        for (auto n : nums) {
+            if (++counter[n] > nums.size()/2) return n;
+        }
+        return -1;
+    }
+};
+#+END_SRC
+
+**  315 Count of Smaller Numbers After Self 
+#+BEGIN_SRC c++
+class FenwickTree {    
+public:
+    FenwickTree(int n): sums_(n + 1, 0) {}
+    
+    void update(int i, int delta) {
+        while (i < sums_.size()) {
+            sums_[i] += delta;
+            i += lowbit(i);
+        }
+    }
+    
+    int query(int i) const {        
+        int sum = 0;
+        while (i > 0) {
+            sum += sums_[i];
+            i -= lowbit(i);
+        }
+        return sum;
+    }
+private:
+    static inline int lowbit(int x) { return x & (-x); }
+    vector<int> sums_;
+};
+ 
+class Solution {
+public:
+    vector<int> countSmaller(vector<int>& nums) {
+        // Sort the unique numbers
+        set<int> sorted(nums.begin(), nums.end());
+        // Map the number to its rank
+        unordered_map<int, int> ranks;
+        int rank = 0;
+        for (const int num : sorted)
+            ranks[num] = ++rank;
+        
+        vector<int> ans;
+        FenwickTree tree(ranks.size());
+        // Scan the numbers in reversed order
+        for (int i = nums.size() - 1; i >= 0; --i) {
+            // Chechk how many numbers are smaller than the current number.
+            ans.push_back(tree.query(ranks[nums[i]] - 1));
+            // Increse the count of the rank of current number.
+            tree.update(ranks[nums[i]], 1);
+        }
+        
+        std::reverse(ans.begin(), ans.end());
+        return ans;
+    }
+};
+#+END_SRC
+
+
+* List Done  
+**  2 Add Two Numbers 
+#+BEGIN_SRC c++
+class Solution {
+public:
+    ListNode* addTwoNumbers(ListNode* l1, ListNode* l2) {
+        ListNode dummy(0);
+        int tail = 0;
+        ListNode* p = &dummy;
+        while (l1 || l2 || tail ) {
+            tail += (l1?l1->val:0) + (l2?l2->val:0);
+            p->next = new ListNode(tail%10);
+            p = p->next;
+            tail /= 10;
+            l1=l1?l1->next:nullptr;
+            l2=l2?l2->next:nullptr;
+        }
+       
+        return dummy.next;
+    }
+};
+#+END_SRC
+
+**  445 Add Two Numbers II 
+#+BEGIN_SRC c++
+class Solution {
+public:
+    ListNode* addTwoNumbers(ListNode* l1, ListNode* l2) {
+        stack<int> s1;
+        stack<int> s2;
+        while (l1) {s1.push(l1->val); l1=l1->next;}
+        while (l2) {s2.push(l2->val); l2=l2->next;}
+        int tail = 0;
+        ListNode* head;
+        ListNode* prev = nullptr;
+        while ((!s1.empty()) || (!s2.empty()) || tail) {
+            tail += (s1.empty()?0:s1.top()) + (s2.empty()?0:s2.top());
+            if (!s1.empty()) s1.pop();
+            if (!s2.empty()) s2.pop();
+            head = new ListNode(tail % 10);
+            head->next = prev;
+            prev = head;
+            tail /= 10;
+        } 
+        return head;
+    }
+};
+#+END_SRC
+
+**  24 Swap Nodes in Pairs 
+#+BEGIN_SRC c++
+class Solution {
+public:
+    ListNode* swapPairs(ListNode* head) {
+        ListNode dummy(0);
+        ListNode* prev = &dummy;
+        prev->next = head;
+        while (prev->next && prev->next->next) {
+            auto p1 = prev->next;
+            auto p2 = p1->next;
+            p1->next = p2->next;
+            p2->next = p1;
+            prev->next = p2;
+            prev = p1;
+        }
+        return dummy.next;
+    }
+};
+#+END_SRC
+
+**  206 Reverse Linked List 
+#+BEGIN_SRC c++
+class Solution {
+public:
+    ListNode* reverseList(ListNode* head) {
+        ListNode *prev = nullptr, * curr = head;
+        while (curr) {
+            auto next = curr->next;
+            curr->next = prev;
+            prev = curr;
+            curr = next;
+        }
+        return prev;
+    }
+};
+#+END_SRC
+
+**  141 Linked List Cycle 
+#+BEGIN_SRC c++
+class Solution {
+public:
+    bool hasCycle(ListNode *head) {
+        if (!head) return false;
+        ListNode *fast=head, *slow=head;
+        while (fast->next && fast->next->next) {
+            fast = fast->next->next;
+            slow = slow->next;
+            if (fast == slow) return true;
+        }
+        return false;
+    }
+};
+#+END_SRC
+
+**  142 Linked List Cycle II 
+#+BEGIN_SRC c++
+class Solution {
+public:
+    ListNode *detectCycle(ListNode *head) {
+        if (!head) return nullptr;
+        ListNode *fast = head, *slow = head, * seeker = head;
+        while (fast->next && fast->next->next) {
+            fast = fast->next->next;
+            slow = slow->next;
+            if (fast == slow) {
+                while (seeker != slow) {
+                    seeker = seeker->next;
+                    slow = slow->next;
+                }
+                return seeker;
+            }
+        }
+        return nullptr;
+    }
+};
+#+END_SRC
+
+**  23 Merge k Sorted List 
+#+BEGIN_SRC c++
+class Solution {
+public:
+    ListNode* mergeKLists(vector<ListNode*>& lists) {
+        return helpMerge(lists, 0, lists.size());
+    }
+private:
+    ListNode* helpMerge(vector<ListNode*>& lists, int left, int right) {
+        if (right <= left) return nullptr;
+        if (right == left + 1) return lists[left];
+        if (right == left + 2) return mergeTwo(lists[left], lists[left+1]);
+        int mid = left + (right -left ) /2;
+        return mergeTwo(helpMerge(lists, left, mid) , helpMerge(lists, mid, right));
+    }
+    
+    ListNode* mergeTwo(ListNode* list1, ListNode* list2) {
+        ListNode dummy(0);
+        ListNode *tail = &dummy;
+        while (list1 && list2) {
+            if (list1->val > list2->val) swap(list1, list2);
+            tail->next = list1;
+            list1 = list1->next;
+            tail = tail->next;
+        }
+        if (list1) tail->next = list1;
+        if (list2) tail->next = list2;
+        return dummy.next;
+    }
+};
+#+END_SRC
+
+**  21 Merge Two Sorted Lists 
+#+BEGIN_SRC c++
+class Solution {
+public:
+    ListNode* mergeTwoLists(ListNode* l1, ListNode* l2) {
+        ListNode dummy(0);
+        ListNode *p = &dummy;
+        while (l1 && l2) {
+            if (l1->val > l2->val) swap(l1, l2);
+            p->next = l1;
+            l1 = l1->next;
+            p = p->next;
+        }
+        if (l1) p->next = l1;
+        if (l2) p->next = l2;
+        return dummy.next;
+    }
+};
+#+END_SRC
+
+**  147 Insertion Sort List 
+#+BEGIN_SRC c++
+class Solution {
+public:
+    ListNode* insertionSortList(ListNode* head) {
+        ListNode dummy(0);
+        dummy.next = head;
+        ListNode *curr = head;
+        ListNode *tail = &dummy;
+        while (curr) {
+            auto next = curr->next;
+            auto p = &dummy;
+            while (p->next->val < curr->val) p = p->next;
+            if (p->next != curr) {
+                auto next_p = p->next;
+                p->next = curr;
+                curr->next = next_p;
+                tail->next = next;
+            } else {
+                tail = curr;
+            }
+            curr = next;
+        }
+        return dummy.next;
+    }
+};
+#+END_SRC
+
+**  148 Sort List 
+#+BEGIN_SRC c++
+class Solution {
+public:
+    ListNode* sortList(ListNode* head) {
+        if (!head || !head->next) return head;
+        ListNode *slow = head, *fast = head;
+        while (fast->next && fast->next->next) {
+            slow = slow->next;
+            fast = fast->next->next;
+        }
+        ListNode *l2 = slow->next;
+        slow->next = nullptr;
+        return merge(sortList(head), sortList(l2));
+        
+    }
+private:
+    ListNode* merge(ListNode *l1, ListNode *l2) {
+        ListNode dummy(0);
+        ListNode *p = &dummy;
+        while (l1 && l2) {
+            if (l1->val > l2->val) swap(l1, l2);
+            p->next = l1;
+            l1 = l1->next;
+            p = p->next;
+        }
+        if (l1) p->next = l1;
+        if (l2) p->next = l2;
+        return dummy.next;
+    }
+};
+
+#+END_SRC
+
+**  707 Design Linked List 
+#+BEGIN_SRC c++
+class MyLinkedList {
+public:
+    /** Initialize your data structure here. */
+    MyLinkedList() : head(nullptr), tail(nullptr), length(0) {
+        
+    }
+    
+    ~MyLinkedList()  {
+        auto curr = head;
+        while (curr) {
+            auto next = curr->next;
+            delete curr;
+            curr = next;
+        }
+        head = tail = nullptr;
+    }
+    
+    /** Get the value of the index-th node in the linked list. If the index is invalid, return -1. */
+    int get(int index) {
+        if (index >= length || index < 0) return -1;
+        auto p = head;
+        while (index--) p = p->next;
+        return p->val;
+    }
+    
+    /** Add a node of value val before the first element of the linked list. After the insertion, the new node will be the first node of the linked list. */
+    void addAtHead(int val) {
+        auto newNode = new ListNode(val);
+        if (length==0) {
+            tail = head = newNode;
+        } else {
+            newNode->next = head;
+            head = newNode;
+        }
+        length++;
+        
+    }
+    
+    /** Append a node of value val to the last element of the linked list. */
+    void addAtTail(int val) {
+        auto newNode = new ListNode(val);
+        if (length ==0) {
+            head = tail = newNode;
+        } else {
+            tail->next = newNode;
+            tail = tail->next;
+        }
+        length++;
+    }
+    
+    /** Add a node of value val before the index-th node in the linked list. If index equals to the length of linked list, the node will be appended to the end of linked list. If index is greater than the length, the node will not be inserted. */
+    void addAtIndex(int index, int val) {
+        if (index > length || index <0) return;
+        if (index == 0) addAtHead(val);
+        else if (index == length) addAtTail(val);
+        else {
+            auto prev = head;
+            index--;
+            while (index--) prev=prev->next;
+            ListNode* newNode = new ListNode(val);
+            auto next = prev->next;
+            prev->next = newNode;
+            newNode->next = next;
+            length++;
+        }
+    }
+    
+    /** Delete the index-th node in the linked list, if the index is valid. */
+    void deleteAtIndex(int index) {
+        if (index < 0 || index > length-1) return;
+        if(length==1) {
+            delete head;
+            head = tail = nullptr;
+            length = 0;
+            return;
+        }
+        ListNode dummy(0);
+        auto prev=&dummy;
+        prev->next = head;
+        int idx = index;
+        while(idx--) prev = prev->next;
+        ListNode* curr = prev->next;
+        prev->next = prev->next->next;
+        
+        
+        if (index ==0) head = prev->next;
+        if (index == length-1) tail = prev;
+        length--;
+        delete curr;
+    }
+    
+private:
+    struct ListNode {
+        ListNode(int k) : val(k), next(nullptr) {};
+        int val;
+        ListNode *next;
+    };
+    ListNode* head;
+    ListNode* tail;
+    int length;
+};
+#+END_SRC
+
+
+* Graph 
+**  133 Clone Graph 
+#+BEGIN_SRC c++
+class Solution {
+public:
+    Node* helpCloneGraph(Node* node, unordered_map<Node *, Node *>& hashMap) {
+        if (!node) return nullptr;
+        Node* head = new Node(node->val);
+        hashMap.emplace(node, head);
+        for (auto neighbour : node->neighbors) {
+            if ( ! hashMap.count(neighbour)) {
+                auto new_node = helpCloneGraph(neighbour, hashMap);
+                head->neighbors.push_back(new_node);
+            } else {
+                head->neighbors.push_back(hashMap[neighbour]);
+            }
+        }
+        return head;
+    }
+    
+    Node* cloneGraph(Node* node) {
+        unordered_map<Node *, Node *> hashMap;
+        return helpCloneGraph(node, hashMap);
+    }
+};
+#+END_SRC
+
+**  138 Copy List with Random Pointer 
+#+BEGIN_SRC c++
+
+class Solution {
+public:
+    Node* copyRandomList(Node* head) {
+        unordered_map<Node*, Node *> hashMap;
+        return helpCopyRandomList(head, hashMap);
+    }
+private:
+     Node* helpCopyRandomList(Node* head, unordered_map<Node*, Node *> &hashMap) {
+         if (!head) return nullptr;
+         auto newHead = new Node(head->val);
+         hashMap.emplace(head, newHead);
+         
+         if (head->next) {
+             if (hashMap.count(head->next)) {
+                 newHead->next = hashMap[head->next];
+             } else {
+                 auto newNext = helpCopyRandomList(head->next, hashMap);
+                 newHead->next = newNext;
+             }
+         }
+         
+         if (head->random) {
+             if (hashMap.count(head->random)) {
+                 newHead->random = hashMap[head->random];
+             } else {
+                 auto newRandom = helpCopyRandomList(head->random, hashMap);
+                 newHead->random = newRandom;
+             }
+         }
+         return newHead;
+    }
+};
+#+END_SRC
+
+**  200 Number of Islands 
+#+BEGIN_SRC c++
+class Solution {
+public:
+    int numIslands(vector<vector<char>>& grid) {
+        if (grid.empty()) return 0;
+        int ans = 0;
+        int M = grid.size();
+        int N = grid[0].size();
+        for (int i=0;i<M;i++) {
+            for (int j=0;j<N;j++) {
+                ans += grid[i][j] - '0';
+                dfs(grid, i, j, M, N);
+            }
+        }
+        return ans;
+    }
+private:
+    void dfs(vector<vector<char>>& grid, int x, int y, int M, int N) {
+        if (x<0 || y<0 || x>=M || y>=N || grid[x][y] == '0') return;
+        grid[x][y] = '0';
+        vector<int> dir{-1,0,1,0,-1};
+        for (int k=0;k<4;k++) {
+            dfs(grid, x+dir[k], y+dir[k+1], M, N);
+        }
+    }
+};
+#+END_SRC
+
+**  547 Number of Provinces 
+#+BEGIN_SRC c++
+class Solution {
+public:
+    int findCircleNum(vector<vector<int>>& isConnected) {
+        if (isConnected.empty()) return 0;
+        int N = isConnected.size();
+        int ans = 0;
+        for (int i=0; i<N; i++) {
+            ans += isConnected[i][i];
+            dfs(isConnected, i, N);
+        }
+        return ans;
+    }
+private:
+    void dfs(vector<vector<int>>& isConnected, int x, int N) {
+        if (!isConnected[x][x]) return;
+        isConnected[x][x] = 0;
+        for (int j=0; j<N; j++) {
+            if (isConnected[x][j]) {
+                dfs(isConnected, j, N);
+            }
+        }
+    }
+    
+};
+#+END_SRC
+
+**  695 Max Area of Islands 
+#+BEGIN_SRC c++
+class Solution {
+public:
+    int maxAreaOfIsland(vector<vector<int>>& grid) {
+        int ans = 0;
+        for (int i=0; i<grid.size(); i++) {
+            for (int j=0; j<grid[i].size(); j++) {
+                if (grid[i][j] == 1) {
+                    int curr = 0;
+                    help(grid, i, j, curr);
+                    ans = max(ans, curr);
+                }
+            }
+        }
+        return ans;
+    }
+    void help(vector<vector<int>>& grid, int x, int y, int &curr) {
+        if (x<0 || x>grid.size()-1 || y<0 || y>grid[0].size()-1 || grid[x][y]!=1) return;
+        curr++;
+        grid[x][y] = -1;
+        vector<int> dir = {-1, 0, 1, 0, -1};
+        for (int i=0; i<4; i++) {
+            help(grid, x+dir[i], y+dir[i+1], curr);
+        }
+    }
+};
+#+END_SRC
+
+**  733 ?? xxx 
+#+BEGIN_SRC c++
+#+END_SRC
+
+**  827 ?? xxx 
+#+BEGIN_SRC c++
+#+END_SRC
+
+**  1162 ?? xxx 
+#+BEGIN_SRC c++
+#+END_SRC
+
+**  841 Keys and Rooms xxx 
+#+BEGIN_SRC c++
+class Solution {
+public:
+    bool canVisitAllRooms(vector<vector<int>>& rooms) {
+        auto N = rooms.size();
+        unordered_set<int> accessed;
+        queue<int> q;
+        q.push(0);
+        accessed.insert(0);
+        while (!q.empty()) {
+            auto q_size = q.size();
+            while (q_size--) {
+                int i = q.front(); q.pop();
+                for (auto new_room : rooms[i]) {
+                    if (!accessed.count(new_room)) {
+                        q.push(new_room);
+                        accessed.insert(new_room);
+                    }
+                }
+            }
+        }
+        return accessed.size() == N;
+    }
+};
+#+END_SRC
+
+**  xxx 
+#+BEGIN_SRC c++
+#+END_SRC
+
+**  xxx 
+#+BEGIN_SRC c++
+#+END_SRC
+
+**  xxx 
+#+BEGIN_SRC c++
+#+END_SRC
+
+**  xxx 
+#+BEGIN_SRC c++
+#+END_SRC
+
+**  xxx 
+#+BEGIN_SRC c++
+#+END_SRC
+
+
+* Tree
+**  94 Binary Tree Inorder Traversal 
+#+BEGIN_SRC c++
+class Solution {
+public:
+    vector<int> inorderTraversal(TreeNode* root) {
+        vector<int> ans;
+        helpInorderTransversal(root, ans);
+        return ans;
+    }
+private:
+    void helpInorderTransversal(TreeNode* root,  vector<int> &ans) {
+        if (!root) return;
+        helpInorderTransversal(root->left, ans);
+        ans.push_back(root->val);
+        helpInorderTransversal(root->right, ans);
+    }
+};
+
+class Solution {
+public:
+    vector<int> inorderTraversal(TreeNode* root) {
+        vector<int> ans;
+        if (!root) return {};
+        stack<TreeNode *> st;
+        TreeNode *curr = root;
+        while (curr || !st.empty()) {
+            while (curr ) {st.push(curr); curr=curr->left;}
+            curr = st.top();
+            st.pop();
+            ans.push_back(curr->val);
+            curr = curr->right;
+        }
+        return ans;
+    }
+};
+#+END_SRC
+
+**  144 Binary Tree Preorder Traversal 
+#+BEGIN_SRC c++
+class Solution {
+public:
+    vector<int> preorderTraversal(TreeNode* root) {
+        if (!root) return {};
+        vector<int> ans;
+        stack<TreeNode *> stack;
+        stack.push(root);
+        while (!stack.empty()) {
+            auto curr = stack.top(); stack.pop();
+            ans.push_back(curr->val);
+            if (curr->right) stack.push(curr->right);
+            if (curr->left) stack.push(curr->left);
+        }
+        return ans;
+    }
+};
+#+END_SRC
+
+**  145 Binary Tree Postorder Tranversal 
+#+BEGIN_SRC c++
+class Solution {
+public:
+    vector<int> postorderTraversal(TreeNode* root) {
+        if (!root) return {};
+        vector<int> ans;
+        stack<TreeNode *> stack;
+        stack.push(root);
+        while (!stack.empty()) {
+            auto curr = stack.top(); stack.pop();
+            ans.push_back(curr->val);
+            if (curr->left) stack.push(curr->left);
+            if (curr->right) stack.push(curr->right);
+        }
+        reverse(ans.begin(), ans.end());
+        return ans;
+    }
+};
+#+END_SRC
+**  429 N-ary Tree Level Order traversal 
+#+BEGIN_SRC c++
+class Solution {
+public:
+    vector<vector<int>> levelOrder(Node* root) {
+        vector<vector<int>> ans;
+        if (!root) return ans;
+        queue<Node *> q;
+        q.push(root);
+        while (!q.empty()) {
+            int size = q.size();
+            vector<int> level;
+            while (size--) {
+                auto f = q.front(); q.pop();
+                level.push_back(f->val);
+                for (auto child : f->children) {
+                    q.push(child);
+                }
+            }
+            ans.push_back(level);
+        }
+        return ans;
+    }
+};
+#+END_SRC
+**  589 N-ary Tree Preorder Traversal 
+#+BEGIN_SRC c++
+class Solution {
+public:
+    void help(Node *root, vector<int> &ans) {
+        if (!root) return;
+        ans.push_back(root->val);
+        for (auto & child : root->children) {
+            help(child, ans);
+        }
+    } 
+    vector<int> preorder(Node* root) {
+        vector<int>ans;
+        help(root, ans);
+        return ans;
+    }
+};
+#+END_SRC
+**  590 N-ary tree Postorder Traversal 
+#+BEGIN_SRC c++
+class Solution {
+public:
+    vector<int> postorder(Node* root) {
+        vector<int> ans;
+        postorder(root, ans);
+        return ans;
+    }
+private:
+    void postorder(Node *root, vector<int> &ans) {
+        if (!root) return;
+        for (auto child : root->children) {
+            postorder(child, ans);
+        }
+        ans.push_back(root->val);
+    }
+};
+#+END_SRC
+
+**  987 Vetical Order Traversal of a Binary Tree 
+#+BEGIN_SRC c++
+
+class Solution
+{
+public:
+    using P = pair<int, int>;
+    int x_min;
+    int x_max;
+    void help(TreeNode *root, map<P, multiset<int>> &m, int x, int y)
+    {
+        if (!root)
+            return;
+        x_min = min(x_min, x);
+        x_max = max(x_max, x);
+        m[{y, x}].insert(root->val);
+        help(root->left, m, x - 1, y + 1);
+        help(root->right, m, x + 1, y + 1);
+    }
+    vector<vector<int>> verticalTraversal(TreeNode *root)
+    {
+        map<P, multiset<int>> m;
+        x_min = INT_MAX;
+        x_max = INT_MIN;
+        help(root, m, 0, 0);
+        vector<vector<int>> v(x_max - x_min + 1);
+        for (auto it = m.begin(); it != m.end(); it++)
+        {
+            vector<int> sub(it->second.begin(), it->second.end());
+            auto i = it->first.second - x_min;
+            v[i].insert(v[i].end(), sub.begin(), sub.end());
+        }
+        return v;
+    }
+};
+#+END_SRC
+
+**  1302 Deepest Leaves Sum 
+#+BEGIN_SRC c++
+class Solution {
+ public:
+  int deepestLeavesSum(TreeNode *root) {
+    int sum = 0, max_depth = 0;
+    function<void(TreeNode *, int)> dfs = [&](TreeNode *root, int level) {
+      if (!root) return;
+      if (level > max_depth) {
+        max_depth = level;
+        sum = 0;
+      }
+      if (max_depth == level) sum += root->val;
+      dfs(root->left, level + 1);
+      dfs(root->right, level + 1);
+    };
+    dfs(root, 0);
+    return sum;
+  }
+};
+#+END_SRC
+
+**  101 Symmetric Tree 
+#+BEGIN_SRC c++
+
+class Solution
+{
+public:
+    bool verify(TreeNode *left, TreeNode *right)
+    {
+        if (left && right)
+        {
+            return left->val == right->val &&
+                   verify(left->left, right->right) && verify(left->right, right->left);
+        }
+        else if (!left && !right)
+        {
+            return true;
+        }
+        return false;
+    }
+    bool isSymmetric(TreeNode *root)
+    {
+        if (!root)
+            return true;
+        return verify(root->left, root->right);
+    }
+};
+#+END_SRC
+
+**  104 Maximu Depth of Binary Tree 
+#+BEGIN_SRC c++
+class Solution {
+public:
+    int maxDepth(TreeNode* root) {
+        if (!root) return 0;
+        return max(maxDepth(root->left), maxDepth(root->right)) + 1;
+    }
+};
+#+END_SRC
+
+**  110 Balanced Bianry Tree 
+#+BEGIN_SRC c++
+class Solution {
+public:
+    bool depth(TreeNode* root, int &k) {
+        if (!root) return true;
+        k++;
+        int m= k, n= k;
+        if (!depth(root->left, m)) return false;
+        if (!depth(root->right, n)) return false;
+        k = max(m, n);
+        return abs(m-n) <= 1;
+    }
+    bool isBalanced(TreeNode* root) {
+        int k = 0;
+        if (!root) return true;
+        return depth(root, k);
+    }
+};
+#+END_SRC
+
+**  xxx 
+#+BEGIN_SRC c++
+#+END_SRC
+
+**  xxx 
+#+BEGIN_SRC c++
+#+END_SRC
+
+**  xxx 
+#+BEGIN_SRC c++
+#+END_SRC
+
+**  xxx 
+#+BEGIN_SRC c++
+#+END_SRC
+
+**  xxx 
+#+BEGIN_SRC c++
+#+END_SRC
+
+**  xxx 
+#+BEGIN_SRC c++
+#+END_SRC
+
+**  xxx 
+#+BEGIN_SRC c++
+#+END_SRC
+
+**  xxx 
+#+BEGIN_SRC c++
+#+END_SRC
+
+
+* DP 
+**  70 Climbing Stairs 
+#+BEGIN_SRC c++
+class Solution {
+public:
+    int climbStairs(int n) {
+        vector<int> dp(n+1, 1);
+        for (int i=2; i<=n; i++) {
+            dp[i] = dp[i-1] + dp[i-2];
+        }
+        return dp[n];
+    }
+};
+#+END_SRC
+**  746 Min Cost Climbing Stairs 
+#+BEGIN_SRC c++
+class Solution {
+public:
+    int minCostClimbingStairs(vector<int>& cost) {
+        int N = cost.size();
+        vector<int> dp(N+1, 0);
+        dp[1] = cost[0];
+        for (int i=2; i<N+1; i++) {
+            dp[i] = min(dp[i-2], dp[i-1]) + cost[i-1];
+        }
+        return min(dp[N], dp[N-1]);
+    }
+};
+#+END_SRC
+**  1137 N-th Tribonacci Number 
+#+BEGIN_SRC c++
+class Solution {
+public:
+    int tribonacci(int n) {
+        if (n==0) return 0;
+        if (n<=2) return 1;
+        vector<int> dp(n+1,0);
+        dp[1]=dp[2]=1;
+        for (int i=3; i<=n; i++) 
+            dp[i] = dp[i-3]+dp[i-2]+dp[i-1];
+        return dp[n];
+    }
+};
+#+END_SRC
+**  303 Range Sum Query 
+#+BEGIN_SRC c++
+class NumArray {
+public:
+    NumArray(vector<int>& nums) {
+        int accum = 0;
+        sum.push_back(accum);
+        for (auto n: nums) {
+            accum += n;
+            sum.push_back(accum);
+        }
+    }
+    
+    int sumRange(int i, int j) {
+        return sum[j+1] - sum[i];
+    }
+private:
+    vector<int> sum;
+};
+#+END_SRC
+**  1218 Longest Arithmetic Subsequence of Given Difference 
+#+BEGIN_SRC c++
+class Solution {
+public:
+    int longestSubsequence(vector<int>& arr, int difference) {
+        unordered_map<int, int> map;
+        int ans = 0;
+        for (auto a : arr) {
+           map[a] = map[a-difference] + 1;
+           ans = max(ans, map[a]);
+        }
+        return ans;
+    }
+};
+#+END_SRC
+**  53 Maximum Subarray 
+#+BEGIN_SRC c++
+class Solution {
+public:
+    int maxSubArray(vector<int>& nums) {
+        int ans = nums[0], prev = nums[0];
+        for (int i=1; i<nums.size(); i++) {
+            auto curr = max(prev + nums[i], nums[i]);
+            ans = max(ans, curr);
+            prev = curr;
+        }
+        return ans;
+    }
+};
+#+END_SRC
+**  121 Best Time to Buy and Sell Stock 
+#+BEGIN_SRC c++
+class Solution {
+public:
+  int maxProfit(vector<int> &prices) {
+    int p_min = prices[0];
+    int ret = 0;
+    for (auto p : prices) {
+      ret = max(ret, p - p_min);
+      p_min = min(p, p_min);
+    }
+    return ret;
+  }
+};
+#+END_SRC
+**  62 Unique Paths 
+#+BEGIN_SRC c++
+class Solution {
+public:
+    int uniquePaths(int m, int n) {
+        vector<vector<int>> dp(m, vector<int>(n, 1));
+        for (int i=1; i<m; i++) {
+            for (int j=1; j<n; j++) {
+                dp[i][j] = dp[i-1][j] + dp[i][j-1];
+            }
+        }
+        return dp[m-1][n-1];
+    }
+};
+#+END_SRC
+**  63 Unique Paths II 
+#+BEGIN_SRC c++
+class Solution {
+public:
+    int uniquePathsWithObstacles(vector<vector<int>>& obstacleGrid) {
+        int M = obstacleGrid.size();
+        int N = obstacleGrid[0].size();
+        if (obstacleGrid[0][0] == 1 || obstacleGrid[M-1][N-1]==1) return 0;
+        obstacleGrid[0][0] = -1;
+        for (int i=0; i<M; i++) {
+            for (int j=0; j<N; j++) {
+                if (i==0 && j==0) continue;
+                if (obstacleGrid[i][j] == 1) continue;
+                auto up = i==0 || obstacleGrid[i-1][j] == 1 ? 0 : obstacleGrid[i-1][j];
+                auto left = j==0 || obstacleGrid[i][j-1] == 1 ? 0 : obstacleGrid[i][j-1];
+                obstacleGrid[i][j] = up + left;
+            }
+        }
+        return -obstacleGrid[M-1][N-1];
+    }
+};
+#+END_SRC
+**  64 Minimum Path Sum 
+#+BEGIN_SRC c++
+class Solution {
+public:
+    int minPathSum(vector<vector<int>>& grid) {
+        int M = grid.size();
+        if (M==0) return 0;
+        int N = grid[0].size();
+        for (int i=0; i<M; i++) {
+            for (int j=0; j<N; j++) {
+                if (i==0 && j==0 ) continue;
+                auto up = i==0 ?  INT_MAX: grid[i-1][j];
+                auto left = j==0 ? INT_MAX : grid[i][j-1];
+                grid[i][j] += min(up, left);
+            }
+        }
+        return grid[M-1][N-1];
+    }
+};
+#+END_SRC
+**  120 Triangle 
+#+BEGIN_SRC c++
+class Solution {
+public:
+    int minimumTotal(vector<vector<int>>& triangle) {
+        if (triangle.size()==1) return triangle[0][0];
+        int ans = INT_MAX;
+        for (int level = 1; level < triangle.size(); level++) {
+            for (int i=0; i<level+1; i++) {
+                auto left = i==0 ? INT_MAX : triangle[level-1][i-1];
+                auto right = i==level ? INT_MAX : triangle[level-1][i];
+                triangle[level][i] += min(left, right);
+                if (level == triangle.size()-1) ans = min(ans, triangle[level][i]);
+            }
+        }
+        return ans;
+    }
+};
+#+END_SRC
+
+**  174 Dungeon Game 
+#+BEGIN_SRC c++
+class Solution {
+ public:
+  int calculateMinimumHP(vector<vector<int>> &dungeon) {
+    int M = dungeon.size();
+    int N = dungeon[0].size();
+    dungeon[M - 1][N - 1] = 1 - dungeon[M - 1][N - 1];
+    for (int i = M - 1; i >= 0; i--) {
+      for (int j = N - 1; j >= 0; j--) {
+        if (i == M - 1 && j == N - 1) continue;
+        auto down = i == M - 1 ? INT_MAX : dungeon[i + 1][j];
+        auto right = j == N - 1 ? INT_MAX : dungeon[i][j + 1];
+        dungeon[i][j] = max(1-dungeon[i][j],  min(down, right) - dungeon[i][j]);
+      }
+    }
+    return max(1, dungeon[0][0]);
+  }
+};
+#+END_SRC
+
+**  931 Minimum Failing Path Sum 
+#+BEGIN_SRC c++
+class Solution {
+public:
+    int minFallingPathSum(vector<vector<int>>& matrix) {
+        for (int i=0;i<matrix.size()-1; i++) {
+            for (int j=0; j<matrix[i].size(); j++) {
+                matrix[i+1][j] += min({j==0?INT_MAX:matrix[i][j-1], 
+                                       j==matrix[i].size()-1?INT_MAX :matrix[i][j+1],
+                                       matrix[i][j]});
+            }
+        }
+        return *min_element(matrix.back().begin(), matrix.back().end());
+    }
+};
+#+END_SRC
+
+**  xxx 
+#+BEGIN_SRC c++
+#+END_SRC
+
+**  xxx 
+#+BEGIN_SRC c++
+#+END_SRC
+
+**  xxx 
+#+BEGIN_SRC c++
+#+END_SRC
+
+**  xxx 
+#+BEGIN_SRC c++
+#+END_SRC
+
+**  xxx 
+#+BEGIN_SRC c++
+#+END_SRC
+
+
+* BST Done 
+**  98 Validate Binary Serach Tree 
+#+BEGIN_SRC c++
+class Solution {
+public:
+    bool isValidBST(TreeNode* root) {
+        return helpValidBST(root, LLONG_MIN, LLONG_MAX);
+    }
+private:
+    bool helpValidBST(TreeNode* root, long long min_long, long long max_long) {
+        if (!root) return true;
+        if (root->val <= min_long || root->val >=max_long ) return false;
+        if (root->left && !helpValidBST(root->left, min_long, root->val)) return false;
+        if (root->right && !helpValidBST(root->right, root->val, max_long)) return false;
+        return true;
+    }
+};
+#+END_SRC
+**  530 Minimum Absolute Difference 
+#+BEGIN_SRC c++
+class Solution {
+public:
+    int getMinimumDifference(TreeNode* root) {
+        vector<int> sorted;
+        inorder(root, sorted);
+        int ans = INT_MAX;
+        for (int i=0; i<sorted.size()-1;i++) 
+            ans = min(ans, sorted[i+1] - sorted[i]);
+        return ans;
+    }
+public:
+    void inorder(TreeNode* root, vector<int>& sorted) {
+        if (!root) return;
+        inorder(root->left, sorted);
+        sorted.push_back(root->val);
+        inorder(root->right, sorted);
+    }
+};
+#+END_SRC
+**  700 Serach in a Bianry Search Tree 
+#+BEGIN_SRC c++
+class Solution {
+public:
+    TreeNode* searchBST(TreeNode* root, int val) {
+        if (!root) return nullptr;
+        if (val < root->val) return searchBST(root->left, val);
+        else  if (val > root->val) return searchBST(root->right, val);
+        else return root;
+        return nullptr;
+    }
+};
+
+class Solution {
+public:
+    TreeNode* searchBST(TreeNode* root, int val) {
+        TreeNode *curr = root;
+        while (curr) {
+            if (curr->val == val) return curr;
+            curr  = curr->val > val ? curr->left : curr->right;
+        }
+        return nullptr;
+    }
+};
+#+END_SRC
+
+**  701 Insert Into a Binary Search Tree 
+#+BEGIN_SRC c++
+class Solution {
+public:
+    TreeNode* insertIntoBST(TreeNode* root, int val) {
+        if (!root) {
+            root = new TreeNode(val);
+            return root;
+        }
+        auto curr = root;
+        while (curr) {
+            auto next = val < curr->val ? curr->left : curr->right;
+            if (next) {
+                curr = next;
+            } else {
+                if (val < curr->val) curr->left = new TreeNode(val); else curr->right = new TreeNode(val);
+                return root;
+            }
+        }
+        return root;
+    }
+};
+#+END_SRC
+
+**  230 Kth Smallest Element in a BST 
+#+BEGIN_SRC c++
+class Solution {
+ public:
+  int kthSmallest(TreeNode *root, int k) { return inorder(root, k); }
+
+ private:
+  int inorder(TreeNode *root, int &k) {
+    if (!root) return 0;
+    auto x = inorder(root->left, k);
+    if (k == 0) return x;
+    if (--k == 0) return root->val;
+    return inorder(root->right, k);
+  }
+};
+#+END_SRC
+
+**  99 Recovery Bianry Search Tree  
+#+BEGIN_SRC c++
+class Solution {
+ public:
+  void recoverTree(TreeNode *root) {
+    inorder(root);
+    auto val = p1->val;
+    p1->val = p2->val;
+    p2->val = val;
+  }
+
+ private:
+  TreeNode *prev = nullptr;
+  TreeNode *p1 = nullptr;
+  TreeNode *p2 = nullptr;
+  void inorder(TreeNode *root) {
+    if (!root) return;
+    inorder(root->left);
+    visit(root);
+    inorder(root->right);
+  }
+  void visit(TreeNode *root) {
+    if (prev && prev->val > root->val) {
+      if (!p1) p1 = prev;
+      p2 = root;
+    }
+    prev = root;
+  }
+};
+#+END_SRC
+
+**  108 Covnerrt Sorted Arrayt to Binary Search Tree 
+#+BEGIN_SRC c++
+class Solution {
+ public:
+  TreeNode *sortedArrayToBST(vector<int> &nums) { return help(nums, 0, nums.size()); }
+
+ private:
+  TreeNode *help(vector<int> &nums, int start, int end) {
+    if (start >= end) return nullptr;
+    int mid = start + (end - start) / 2;
+    return new TreeNode(nums[mid], help(nums, start, mid), help(nums, mid + 1, end));
+  }
+};
+#+END_SRC
+
+**  501 Find Mode in Binary Search Tree 
+#+BEGIN_SRC c++
+class Solution {
+ public:
+  vector<int> findMode(TreeNode *root) {
+    inorder(root);
+    return ans_;
+  }
+
+ private:
+  int val_ = INT_MIN;
+  int count_ = 0;
+  int max = 0;
+  vector<int> ans_;
+  void inorder(TreeNode *root) {
+    if (!root) return;
+    inorder(root->left);
+    visit(root->val);
+    inorder(root->right);
+  }
+  void visit(int val) {
+    if (val == val_ && count_ > 0) {
+      count_++;
+    } else {
+      val_ = val;
+      count_ = 1;
+    }
+    if (count_ > max) {
+      max = count_;
+      ans_.clear();
+    }
+    if (count_ == max) {
+      ans_.push_back(val);
+    }
+  }
+};
+#+END_SRC
+
+**  450 Delete Node in BST  
+#+BEGIN_SRC c++
+class Solution {
+ public:
+  TreeNode* deleteNode(TreeNode* root, int key) {
+     TreeNode *dummy = new TreeNode(0, root, nullptr);
+     TreeNode *prev = dummy;
+     TreeNode *curr = root;
+     while (curr) {
+       if (curr->val == key) break;
+       prev = curr;
+       curr = key < curr->val ? curr->left : curr->right;
+     }
+     if (!curr) return root;
+     deleteByPrev(prev, curr);
+     root = dummy->left;
+     delete dummy;
+     return root;
+  }
+  private:
+   void deleteByPrev(TreeNode *prev , TreeNode *curr) {
+     if (!curr->left || !curr->right) {
+       auto next = curr->left ? curr->left : curr->right;
+       if (prev->left == curr) prev->left = next; else prev->right = next;
+       delete curr;
+       return;
+     }
+     TreeNode *sub_prev = curr;
+     TreeNode *sub_curr = curr->right;
+     while (sub_curr && sub_curr->left) {
+       sub_prev = sub_curr;
+       sub_curr = sub_curr->left;
+     }
+     curr->val = sub_curr->val;
+     deleteByPrev(sub_prev, sub_curr);
+   }
+};
+#+END_SRC
+
+
+* Search 
+**  17 Letter Combinations of a Phone Number 
+#+BEGIN_SRC c++
+class Solution {
+public:
+    vector<string> letterCombinations(string digits) {
+        vector<string> ans;
+        if (digits.size() == 0) return ans;
+        vector<string> dict = {"abc", "def", "ghi", "jkl", "mno",
+                              "pqrs", "tuv", "wxyz"};
+        string str = "";
+        helpLetterCombinations(digits, dict, 0, ans, str);
+        return ans;
+        
+    }
+private:
+    void helpLetterCombinations(string digits, vector<string>& dict, int idx,
+                             vector<string>& ans, string& str) {
+        if (idx == digits.size()) {
+            ans.push_back(str);
+            return;
+        }
+        auto sub_str = dict[digits[idx] - '2'];
+        for (auto ch : sub_str) {
+            str += ch;
+            helpLetterCombinations(digits, dict, idx+1, ans, str);
+            str.pop_back();
+        }
+    }
+};
+#+END_SRC
+**  39 Combination Sum 
+#+BEGIN_SRC c++
+class Solution {
+public:
+    vector<vector<int>> combinationSum(vector<int>& candidates, int target) {
+        vector<vector<int>> ans;
+        sort(candidates.begin(), candidates.end());
+        if (candidates.size() == 0 || candidates[0] > target) return ans;
+        vector<int> item;
+        helpCombinationSum(candidates, target, 0, 0, item, ans);
+        return ans;
+    }
+private:
+    void helpCombinationSum(vector<int>& candidates, int target, int sum, int idx,
+                            vector<int>& item, vector<vector<int>>& ans) {
+        if (sum > target) return;
+        if (sum == target) {
+            ans.push_back(item);
+            return;
+        }
+        for (int i=idx;i<candidates.size();i++) {
+            auto c = candidates[i];
+            item.push_back(c);
+            helpCombinationSum(candidates, target, sum+c, i, item, ans);
+            item.pop_back();
+        }
+    }
+};
+#+END_SRC
+**  40 Combination Sum II 
+#+BEGIN_SRC c++
+class Solution {
+public:
+    vector<vector<int>> combinationSum2(vector<int>& candidates, int target) {
+        vector<vector<int>> ans;
+        sort(candidates.begin(), candidates.end());
+        vector<int> curr;
+        help(candidates, target, ans, -1, curr);
+        return ans;
+    }
+    
+    void help(vector<int>& candidates, int target, vector<vector<int>>& ans, int idx, vector<int> &curr) {
+        if (target == 0) {ans.push_back(curr); return;}
+        if (target < 0) return;
+        for (int i=idx+1; i<candidates.size();i++) {
+            curr.push_back(candidates[i]);
+            help(candidates, target - candidates[i], ans, i, curr);
+            curr.pop_back();
+            while (i+1<candidates.size() && candidates[i] == candidates[i+1]) i++;
+        }
+    }
+};
+#+END_SRC
+**  xxx 
+#+BEGIN_SRC c++
+#+END_SRC
+**  xxx 
+#+BEGIN_SRC c++
+#+END_SRC
+**  xxx 
+#+BEGIN_SRC c++
+#+END_SRC
+
+
+* Advanced 
+**  208 Implement Trie(Prefix Tree) 
+#+BEGIN_SRC c++
+class Trie {
+public:
+    /** Initialize your data structure here. */
+    Trie() {
+        root_ = unique_ptr<TrieNode>(new TrieNode());
+    }
+    
+    
+    /** Inserts a word into the trie. */
+    void insert(string word) {
+        auto p = root_.get();
+        for (auto c : word) {
+            if (!p->children.count(c)) p->children[c] = new TrieNode();
+            p = p->children[c];
+        }
+        p->isWord = true;
+    }
+    
+    /** Returns if the word is in the trie. */
+    bool search(string word) {
+        auto p = findPrefix(word);
+        return p==nullptr || p->isWord == false ? false : true;
+    }
+    
+    /** Returns if there is any word in the trie that starts with the given prefix. */
+    bool startsWith(string prefix) {
+        auto p = findPrefix(prefix);
+        return p != nullptr;
+    }
+private:
+    struct TrieNode {
+        TrieNode() : isWord(false) {}
+        ~TrieNode() {
+            for (auto& kv : children) {
+                if  (kv.second) delete kv.second;
+            }
+        }
+        bool isWord;
+        unordered_map<char, TrieNode *> children;
+    };
+    TrieNode *findPrefix(string prefix) {
+        auto p = root_.get();
+        for (auto& c:prefix) {
+            if (p->children.count(c)) p=p->children[c]; else return nullptr;
+        }
+        return p;
+    }
+    unique_ptr<TrieNode> root_; 
+};
+#+END_SRC
+**  xxx 
+#+BEGIN_SRC c++
+#+END_SRC
+
+**  xxx 
+#+BEGIN_SRC c++
+#+END_SRC
+
+**  xxx 
+#+BEGIN_SRC c++
+#+END_SRC
+
+**  xxx 
+#+BEGIN_SRC c++
+#+END_SRC
+
+**  307 Range Sum Query - Mutable 
+#+BEGIN_SRC c++
+
+class Fenwick {
+public:
+    Fenwick(int n) {
+        N = n;
+        BIT = vector<int>(n+1, 0);
+    }
+    int get(int x) {
+        int ans = 0;
+        for (; x > 0;x -= (x & (-x))) {
+            ans += BIT[x];
+        }
+        return ans;
+    }
+    
+    void update(int x, int k) {
+        for (; x <= N; x += (x & (-x)) ) {
+            BIT[x] += k;
+        }
+    }
+private:
+    vector<int> BIT;
+    int N;
+};
+
+class NumArray {
+public:
+    NumArray(vector<int>& nums): fen(new Fenwick((int)nums.size())) {
+        for (int i=0; i<nums.size(); i++) fen->update(i+1, nums[i]);
+        arr = nums;
+        
+    }
+    
+    void update(int index, int val) {
+        fen->update(index+1, val - arr[index]);
+        arr[index] = val;
+    }
+    
+    int sumRange(int left, int right) {
+        return fen->get(right+1) - fen->get(left);
+        
+    }
+private:
+    unique_ptr<Fenwick> fen;
+    vector<int> arr;
+};
+#+END_SRC
+
+**  901 Online Stock Span 
+#+BEGIN_SRC c++
+class StockSpanner {
+ public:
+  using P = pair<int, int>;
+  StockSpanner() : idx(0) { st.emplace(INT_MAX, 0); }
+
+  int next(int price) {
+    idx++;
+    while (price >= st.top().first) st.pop();
+    int prev = st.top().second;
+    st.emplace(price, idx);
+    return idx - prev;
+  }
+
+ private:
+  stack<P> st;
+  int idx;
+};
+#+END_SRC
+
+**  907 Sum of Subarray Minimus 
+#+BEGIN_SRC c++
+class Solution {
+ public:
+  using P = pair<int, int>;
+  int sumSubarrayMins(vector<int> &arr) {
+    const int M = 1e9 + 7;
+    int ans = 0;
+    stack<P> st;
+    st.emplace(INT_MIN, -1);
+    unordered_map<int, int> m;
+    m[-1] = 0;
+    for (int i = 0; i < arr.size(); i++) {
+      while (arr[i] <= st.top().first) st.pop();
+      int idx = st.top().second;
+      m[i] = (m[idx] + (i - idx) * arr[i]) % M;
+      ans = (ans + m[i]) % M;
+      st.emplace(arr[i], i);
+    }
+    return ans;
+  }
+};
+#+END_SRC
+
+**  1019 Next Greater Node in Linked List  
+#+BEGIN_SRC c++
+class Solution {
+public:
+    vector<int> nextLargerNodes(ListNode* head) {
+        vector<int> v;
+        vector<int> ans;
+        while (head) {v.push_back(head->val); head = head->next;}
+        stack<int> st;
+        for (int i=v.size()-1; i>=0; i--) {
+            while (!st.empty() && v[i] >= st.top()) st.pop();
+            ans.push_back(st.empty() ? 0 : st.top());
+            st.push(v[i]);
+        }
+        reverse(ans.begin(), ans.end());
+        return ans;
+    }
+};
+#+END_SRC
+
+**  239 Sliding Window Maximum 
+#+BEGIN_SRC c++
+class Solution {
+ public:
+  using P = pair<int, int>;
+  vector<int> maxSlidingWindow(vector<int> &nums, int k) {
+    deque<P> dq;
+    vector<int> ans;
+    for (int i = 0; i < nums.size(); i++) {
+      if (!dq.empty() && dq.front().second + k <= i) dq.pop_front();
+      while (!dq.empty() && nums[i] >= dq.back().first) dq.pop_back();
+      dq.emplace_back(nums[i], i);
+      if (i >= k - 1) ans.push_back(dq.front().first);
+    }
+    return ans;
+  }
+};
+#+END_SRC
+
+**  AO 1803 Count Pairs With XOR in a Range 
+#+BEGIN_SRC c++
+class Solution {
+public:
+    int countPairs(vector<int>& nums, int low, int high) {
+        return countPairOne(nums, high+1) - countPairOne(nums, low);
+    }
+    
+private:
+    struct Trie {
+        Trie* children[2];
+        int cnt;
+        Trie() {
+            cnt = 0;
+            children[0] = children[1] = nullptr;
+        }
+    };
+    int countPairOne(vector<int>& nums, int threshold) {
+        Trie* root = new Trie();
+        int count = 0;
+        for (auto n : nums) {
+            count += find(root, n, threshold);
+            insert(root, n);
+        }
+        return count;
+    }
+    int find(Trie * root, int n, int thresold) {
+        int count = 0;
+        Trie* node = root;
+        for (int i=20; i>=0; i--) {
+            int b = (n>>i) & 1;
+            int c = (thresold>>i) & 1;
+            if (b==0 && c==0) {
+                if (node->children[0]) node = node->children[0]; else return count;
+            } else if (b==1 && c==0) {
+                if (node->children[1]) node = node->children[1]; else return count;
+            } else if (b==0 && c==1) {
+                if (node->children[0]) count += node->children[0]->cnt;
+                if (node->children[1]) node = node->children[1]; else return count;
+            } else if (b==1 && c==1) {
+                if (node->children[1]) count += node->children[1]->cnt;
+                if (node->children[0]) node = node->children[0]; else return count;
+            }
+        }
+        return count;
+    }
+    void insert(Trie* root, int n) {
+        Trie* node = root;
+        for (int i=20; i>=0; i--) {
+            int b = (n>>i) & 1;
+            if (b==0) {
+                if (!node->children[0]) node->children[0] = new Trie();
+                node = node->children[0];
+                node->cnt++;
+            } else {
+                if (!node->children[1]) node->children[1] = new Trie();
+                node = node->children[1];
+                node->cnt++;
+            }
+        }
+    }
+    
+};
+#+END_SRC
+
+
+* Greedy Done 
+**  218 Skyline Problem 
+#+BEGIN_SRC c++
+class Solution {
+public:
+    vector<vector<int>> getSkyline(vector<vector<int>> buildings) {
+        vector<vector<int>> ans;
+        if (buildings.size()==0) return ans;
+        vector<Edge> edges;
+        for (auto &line : buildings) {
+            auto startEdge = Edge(line[0], line[2], true);
+            auto endEdge = Edge(line[1], line[2], false);
+            edges.push_back(startEdge);
+            edges.push_back(endEdge);
+        }
+        auto comp = [](Edge &a, Edge &b) {
+            if (a.x_ != b.x_) return a.x_ < b.x_;
+            if (a.isStart_ && b.isStart_) return b.height_ < a.height_;
+            if (!a.isStart_ && !b.isStart_) return a.height_ < b.height_;
+            return a.isStart_;
+        };
+        sort(edges.begin(), edges.end(), comp);
+        multiset<int> edgeSet;
+        for (auto &edge : edges) {
+            if (edge.isStart_) {
+                if (edgeSet.empty() || edge.height_ > *edgeSet.rbegin()) {
+                    ans.push_back({edge.x_, edge.height_});
+                }
+                edgeSet.insert(edge.height_);
+            } else {
+                auto it = edgeSet.find(edge.height_);
+                if (it != edgeSet.end())
+                    edgeSet.erase(it);
+                if (edgeSet.empty()) {
+                    ans.push_back({edge.x_, 0});
+                } else if (edge.height_ > *edgeSet.rbegin()) {
+                    ans.push_back({edge.x_, *edgeSet.rbegin()});
+                }
+            }
+        }
+        
+        return ans;
+    }
+private:
+    struct Edge {
+        Edge(int x, int height, bool isStart) :
+        x_(x), height_(height), isStart_(isStart) {}
+        int x_;
+        int height_;
+        bool isStart_;
+    };
+};
+#+END_SRC
+
+
+* Recursion Done 
+**  726 Number of Atoms 
+#+BEGIN_SRC c++
+class Solution {
+public:
+    string countOfAtoms(string formula) {
+        string ans;
+        int idx = 0;
+        auto m = countAtoms(formula, idx);
+        for (auto kv : m) {
+            ans += kv.first;
+            if (kv.second > 1) ans += to_string(kv.second);
+        }
+        return ans;
+    }
+private:
+    map<string, int> countAtoms(const string &formula, int &idx) {
+        map<string, int> counts;
+        while (idx < formula.size()) {
+            if (formula[idx] == '(') {
+                auto tmp_map = countAtoms(formula, ++idx);
+                auto cnt = getCount(formula, idx);
+                for (auto kv : tmp_map) {
+                    counts[kv.first] += kv.second * cnt;
+                }
+            } else if (formula[idx] == ')') {
+                ++idx;
+                return counts;
+            } else {
+                auto name = getName(formula, idx);
+                counts[name] += getCount(formula, idx);
+            }
+        }
+        return counts;
+    }
+    string getName(const string & formula, int& i) {
+        string name_str;
+        while (i<formula.size() && isalpha(formula[i]) && (name_str.empty() || islower(formula[i]))) name_str += formula[i++];
+        return name_str;
+    }
+    
+    int getCount(const string & formula, int& i) {
+        string count_str;
+        while (i<formula.size() && isdigit(formula[i])) count_str += formula[i++];
+        return count_str.empty() ? 1 : stoi(count_str);
+    }
+};
+#+END_SRC
+**  736 Parse List Expression 
+#+BEGIN_SRC c++
+class Solution {
+public:
+    int evaluate(string expression) {
+        int idx = 0;
+        return expr(expression, idx);
+    }
+private:
+    int expr(const string &s, int &idx) {
+        scope.push_front(unordered_map<string,int>());
+        int val = 0;
+        if (s[idx] == '(') idx++;
+        
+        auto token = getToken(s, idx);
+        if (token == "add" || token == "mult") {
+            auto expr_a = expr(s, ++idx);
+            auto expr_b = expr(s, ++idx);
+            val = token == "add" ? expr_a + expr_b : expr_a * expr_b;
+        } else if (token == "let") {
+            while (s[idx] != ')') {
+                ++idx;
+                if (s[idx] == '(') {
+                    val = expr(s, ++idx);
+                    break;
+                }
+                auto tmp_token = getToken(s, idx);
+                if (s[idx] ==  ')') {
+                    val = isalpha(tmp_token[0]) ? getValue(tmp_token) : stoi(tmp_token);
+                    break;
+                }
+                val = scope.front()[tmp_token] = expr(s, ++idx);
+            }
+        } else if (isalpha(token[0])) {
+            val = getValue(token);
+        } else {
+            val = stoi(token);
+        }
+        if (s[idx] == ')') idx++;
+        scope.pop_front();
+        return val;
+    }
+    
+    int getValue(const string &token) {
+        for (auto d : scope) {
+            if (d.count(token)) return d[token];
+        }
+        return 0;
+    }
+    string getToken(const string &s, int &idx) {
+        string token;
+        while (idx < s.size() && s[idx] != ')' && s[idx] !=' ') token += s[idx++];
+        return token;
+    }
+    deque<unordered_map<string, int>> scope;
+};
+#+END_SRC
+**  394 Decode String 
+#+BEGIN_SRC c++
+class Solution {
+public:
+    string decodeString(string s) {
+        int idx = 0;
+        return helpDecode(s, idx);
+    }
+private:
+    string helpDecode(const string &s, int &idx) {
+        int cnt = 1;
+        string ans;
+        while (idx < s.size()) {
+            if (s[idx] == '[') {
+                auto tmp_ans = helpDecode(s, ++idx);
+                for (int i=0; i<cnt; i++) ans += tmp_ans;
+                cnt = 1;
+            } else if (s[idx] == ']') {
+                ++idx;
+                return ans;
+            } else if (isdigit(s[idx])) {
+                cnt = getCount(s, idx);
+            } else {
+                auto symbol = getSymbol(s, idx);
+                for (int i=0; i<cnt; i++) ans += symbol;
+                cnt = 1;
+            }
+        }
+        return ans;
+    }
+    
+    string getSymbol(const string &s, int &idx) {
+        string symbol;
+        while (idx < s.size() && isalpha(s[idx])) symbol += s[idx++];
+        return symbol;
+    }
+    
+    int getCount(const string &s, int &idx) {
+        string cnt;
+        while (idx < s.size() && isdigit(s[idx])) cnt += s[idx++];
+        return stoi(cnt);
+    }
+};
+#+END_SRC
+**  856 Score of Parenthesis 
+#+BEGIN_SRC c++
+class Solution {
+public:
+    int scoreOfParentheses(string S) {
+        if (S.empty()) return 0;
+        return helpScore(S, 0, S.size());
+    }
+private:
+    int helpScore(string &S, int left, int right) {
+        if (right - left ==2) return 1; 
+        int level=0;
+        for (int i=left; i<right; i++) {
+            level += (S[i]=='(' ? 1 : -1);
+            if (level==0 && i + 1< right) {
+                return helpScore(S, left, i+1) + helpScore(S, i+1, right);
+            } 
+        }
+        return 2* helpScore(S, left+1, right-1);
+    }
+};
+#+END_SRC

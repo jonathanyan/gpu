@@ -1,0 +1,430 @@
+[32m[0828 18:24:36 @logger.py:92][0m Argv: ./train.py --config DATA.BASEDIR=/home/jyan/tmp/coco TRAIN.NUM_GPUS=1 TRAIN.STEPS_PER_EPOCH=5 TRAIN.WARMUP=1
+[32m[0828 18:24:36 @train.py:47][0m Environment Information:
+--------------------  -----------------------------------------------------------------------------------------------------
+sys.platform          linux
+Python                3.7.6 (default, Jan  8 2020, 19:59:22) [GCC 7.3.0]
+Tensorpack            v0.10.1-29-g52bbe706-dirty @/home/jyan/anaconda3/envs/py37/lib/python3.7/site-packages/tensorpack
+Numpy                 1.18.5
+TensorFlow            1.15.0/v1.15.0-rc3-22-g590d6ee @/home/jyan/anaconda3/envs/py37/lib/python3.7/site-packages/tensorflow
+TF Compiler Version   7.3.1 20180303
+TF CUDA support       True
+TF MKL support        False
+TF XLA support        False
+Nvidia Driver         /usr/lib/x86_64-linux-gnu/libnvidia-ml.so.440.100
+CUDA libs             /usr/lib64/libcudart.so
+CUDNN libs            /usr/lib64/libcudnn.so
+TF built with CUDA    10
+TF built with CUDNN   7
+NCCL libs
+CUDA_VISIBLE_DEVICES  Unspecified
+GPU 0                 GeForce GTX 1650 with Max-Q Design
+Free RAM              11.14/15.48 GB
+CPU Count             12
+cv2                   4.2.0
+msgpack               1.0.0
+python-prctl          False
+--------------------  -----------------------------------------------------------------------------------------------------
+[32m[0828 18:24:36 @config.py:322][0m Config: ------------------------------------------
+{'BACKBONE': {'FREEZE_AFFINE': False,
+              'FREEZE_AT': 2,
+              'NORM': 'FreezeBN',
+              'RESNET_NUM_BLOCKS': [3, 4, 6, 3],
+              'STRIDE_1X1': False,
+              'TF_PAD_MODE': False,
+              'WEIGHTS': ''},
+ 'CASCADE': {'BBOX_REG_WEIGHTS': [[10.0, 10.0, 5.0, 5.0], [20.0, 20.0, 10.0, 10.0],
+                                  [30.0, 30.0, 15.0, 15.0]],
+             'IOUS': [0.5, 0.6, 0.7]},
+ 'DATA': {'ABSOLUTE_COORD': True,
+          'BASEDIR': '/home/jyan/tmp/coco',
+          'CLASS_NAMES': ['BG', 'person', 'bicycle', 'car', 'motorcycle', 'airplane', 'bus',
+                          'train', 'truck', 'boat', 'traffic light', 'fire hydrant', 'stop sign',
+                          'parking meter', 'bench', 'bird', 'cat', 'dog', 'horse', 'sheep', 'cow',
+                          'elephant', 'bear', 'zebra', 'giraffe', 'backpack', 'umbrella', 'handbag',
+                          'tie', 'suitcase', 'frisbee', 'skis', 'snowboard', 'sports ball', 'kite',
+                          'baseball bat', 'baseball glove', 'skateboard', 'surfboard',
+                          'tennis racket', 'bottle', 'wine glass', 'cup', 'fork', 'knife', 'spoon',
+                          'bowl', 'banana', 'apple', 'sandwich', 'orange', 'broccoli', 'carrot',
+                          'hot dog', 'pizza', 'donut', 'cake', 'chair', 'couch', 'potted plant',
+                          'bed', 'dining table', 'toilet', 'tv', 'laptop', 'mouse', 'remote',
+                          'keyboard', 'cell phone', 'microwave', 'oven', 'toaster', 'sink',
+                          'refrigerator', 'book', 'clock', 'vase', 'scissors', 'teddy bear',
+                          'hair drier', 'toothbrush'],
+          'FILTER_EMPTY_ANNOTATIONS': True,
+          'NUM_CATEGORY': 80,
+          'NUM_WORKERS': 10,
+          'TRAIN': ('coco_train2017',),
+          'VAL': ('coco_val2017',)},
+ 'FPN': {'ANCHOR_STRIDES': (4, 8, 16, 32, 64),
+         'CASCADE': False,
+         'FRCNN_CONV_HEAD_DIM': 256,
+         'FRCNN_FC_HEAD_DIM': 1024,
+         'FRCNN_HEAD_FUNC': 'fastrcnn_2fc_head',
+         'MRCNN_HEAD_FUNC': 'maskrcnn_up4conv_head',
+         'NORM': 'None',
+         'NUM_CHANNEL': 256,
+         'PROPOSAL_MODE': 'Level',
+         'RESOLUTION_REQUIREMENT': 32},
+ 'FRCNN': {'BATCH_PER_IM': 512,
+           'BBOX_REG_WEIGHTS': [10.0, 10.0, 5.0, 5.0],
+           'FG_RATIO': 0.25,
+           'FG_THRESH': 0.5},
+ 'MODE_FPN': True,
+ 'MODE_MASK': True,
+ 'MRCNN': {'ACCURATE_PASTE': True, 'HEAD_DIM': 256},
+ 'PREPROC': {'MAX_SIZE': 1344.0,
+             'PIXEL_MEAN': [123.675, 116.28, 103.53],
+             'PIXEL_STD': [58.395, 57.12, 57.375],
+             'TEST_SHORT_EDGE_SIZE': 800,
+             'TRAIN_SHORT_EDGE_SIZE': [800, 800]},
+ 'RPN': {'ANCHOR_RATIOS': (0.5, 1.0, 2.0),
+         'ANCHOR_SIZES': (32, 64, 128, 256, 512),
+         'ANCHOR_STRIDE': 16,
+         'BATCH_PER_IM': 256,
+         'CROWD_OVERLAP_THRESH': 9.99,
+         'FG_RATIO': 0.5,
+         'HEAD_DIM': 1024,
+         'MIN_SIZE': 0,
+         'NEGATIVE_ANCHOR_THRESH': 0.3,
+         'NUM_ANCHOR': 15,
+         'POSITIVE_ANCHOR_THRESH': 0.7,
+         'PROPOSAL_NMS_THRESH': 0.7,
+         'TEST_PER_LEVEL_NMS_TOPK': 1000,
+         'TEST_POST_NMS_TOPK': 1000,
+         'TEST_PRE_NMS_TOPK': 6000,
+         'TRAIN_PER_LEVEL_NMS_TOPK': 2000,
+         'TRAIN_POST_NMS_TOPK': 2000,
+         'TRAIN_PRE_NMS_TOPK': 12000},
+ 'TEST': {'FRCNN_NMS_THRESH': 0.5,
+          'RESULTS_PER_IM': 100,
+          'RESULT_SCORE_THRESH': 0.05,
+          'RESULT_SCORE_THRESH_VIS': 0.5},
+ 'TRAIN': {'BASE_LR': 0.01,
+           'CHECKPOINT_PERIOD': 20,
+           'EVAL_PERIOD': 50,
+           'LR_SCHEDULE': [120000, 160000, 180000],
+           'NUM_GPUS': 1,
+           'STARTING_EPOCH': 1,
+           'STEPS_PER_EPOCH': 5,
+           'WARMUP': 1,
+           'WARMUP_INIT_LR': 1e-05,
+           'WEIGHT_DECAY': 0.0001},
+ 'TRAINER': 'replicated'}
+[32m[0828 18:24:36 @train.py:67][0m Warm Up Schedule (steps, value): [(0, 1e-05), (1, 0.01)]
+[32m[0828 18:24:36 @train.py:68][0m LR Schedule (epochs, value): [(0, 0.01), (192000.0, 0.001), (256000.0, 0.00010000000000000002)]
+[32m[0828 18:24:51 @coco.py:62][0m Instances loaded from /home/jyan/tmp/coco/annotations/instances_train2017.json.
+[32m[0828 18:24:51 @timer.py:45][0m Load annotations for instances_train2017.json finished, time:0.6959 sec.
+[32m[0828 18:24:54 @data.py:62][0m Ground-Truth category distribution:
+[36m|     class     | #box   |    class     | #box   |     class      | #box   |
+|:-------------:|:-------|:------------:|:-------|:--------------:|:-------|
+|    person     | 31     |   bicycle    | 1      |      car       | 0      |
+|  motorcycle   | 1      |   airplane   | 0      |      bus       | 0      |
+|     train     | 0      |    truck     | 0      |      boat      | 0      |
+| traffic light | 0      | fire hydrant | 0      |   stop sign    | 0      |
+| parking meter | 0      |    bench     | 0      |      bird      | 0      |
+|      cat      | 1      |     dog      | 0      |     horse      | 0      |
+|     sheep     | 0      |     cow      | 9      |    elephant    | 0      |
+|     bear      | 0      |    zebra     | 0      |    giraffe     | 0      |
+|   backpack    | 1      |   umbrella   | 1      |    handbag     | 1      |
+|      tie      | 0      |   suitcase   | 0      |    frisbee     | 0      |
+|     skis      | 0      |  snowboard   | 0      |  sports ball   | 0      |
+|     kite      | 0      | baseball bat | 0      | baseball glove | 0      |
+|  skateboard   | 0      |  surfboard   | 0      | tennis racket  | 0      |
+|    bottle     | 14     |  wine glass  | 1      |      cup       | 8      |
+|     fork      | 0      |    knife     | 5      |     spoon      | 2      |
+|     bowl      | 7      |    banana    | 0      |     apple      | 0      |
+|   sandwich    | 0      |    orange    | 7      |    broccoli    | 0      |
+|    carrot     | 0      |   hot dog    | 0      |     pizza      | 0      |
+|     donut     | 0      |     cake     | 1      |     chair      | 0      |
+|     couch     | 0      | potted plant | 1      |      bed       | 0      |
+| dining table  | 2      |    toilet    | 0      |       tv       | 8      |
+|    laptop     | 0      |    mouse     | 9      |     remote     | 0      |
+|   keyboard    | 6      |  cell phone  | 0      |   microwave    | 1      |
+|     oven      | 6      |   toaster    | 0      |      sink      | 3      |
+| refrigerator  | 1      |     book     | 0      |     clock      | 1      |
+|     vase      | 0      |   scissors   | 0      |   teddy bear   | 0      |
+|  hair drier   | 0      |  toothbrush  | 0      |                |        |
+|     total     | 129    |              |        |                |        |[0m
+[32m[0828 18:24:54 @data.py:354][0m Filtered 0 images which contain no non-crowd groudtruth boxes. Total #images for training: 10
+[32m[0828 18:24:54 @train.py:72][0m Total passes of the training set is: 1.44e+05
+[32m[0828 18:24:54 @input_source.py:221][0m Setting up the queue 'QueueInput/input_queue' for CPU prefetching ...
+[32m[0828 18:24:54 @training.py:110][0m Building graph for training tower 0 on device /gpu:0 ...
+[32m[0828 18:24:54 @argtools.py:138][0m [5m[31mWRN[0m Some BatchNorm layer uses moving_mean/moving_variance in training.
+[32m[0828 18:24:54 @registry.py:90][0m 'conv0': [1, 3, ?, ?] --> [1, 64, ?, ?]
+[32m[0828 18:24:54 @registry.py:90][0m 'pool0': [1, 64, ?, ?] --> [1, 64, ?, ?]
+[32m[0828 18:24:54 @registry.py:90][0m 'group0/block0/conv1': [1, 64, ?, ?] --> [1, 64, ?, ?]
+[32m[0828 18:24:54 @registry.py:90][0m 'group0/block0/conv2': [1, 64, ?, ?] --> [1, 64, ?, ?]
+[32m[0828 18:24:54 @registry.py:90][0m 'group0/block0/conv3': [1, 64, ?, ?] --> [1, 256, ?, ?]
+[32m[0828 18:24:54 @registry.py:90][0m 'group0/block0/convshortcut': [1, 64, ?, ?] --> [1, 256, ?, ?]
+[32m[0828 18:24:54 @registry.py:90][0m 'group0/block1/conv1': [1, 256, ?, ?] --> [1, 64, ?, ?]
+[32m[0828 18:24:54 @registry.py:90][0m 'group0/block1/conv2': [1, 64, ?, ?] --> [1, 64, ?, ?]
+[32m[0828 18:24:54 @registry.py:90][0m 'group0/block1/conv3': [1, 64, ?, ?] --> [1, 256, ?, ?]
+[32m[0828 18:24:54 @registry.py:90][0m 'group0/block2/conv1': [1, 256, ?, ?] --> [1, 64, ?, ?]
+[32m[0828 18:24:54 @registry.py:90][0m 'group0/block2/conv2': [1, 64, ?, ?] --> [1, 64, ?, ?]
+[32m[0828 18:24:54 @registry.py:90][0m 'group0/block2/conv3': [1, 64, ?, ?] --> [1, 256, ?, ?]
+[32m[0828 18:24:54 @registry.py:90][0m 'group1/block0/conv1': [1, 256, ?, ?] --> [1, 128, ?, ?]
+[32m[0828 18:24:54 @registry.py:90][0m 'group1/block0/conv2': [1, 128, ?, ?] --> [1, 128, ?, ?]
+[32m[0828 18:24:54 @registry.py:90][0m 'group1/block0/conv3': [1, 128, ?, ?] --> [1, 512, ?, ?]
+[32m[0828 18:24:54 @registry.py:90][0m 'group1/block0/convshortcut': [1, 256, ?, ?] --> [1, 512, ?, ?]
+[32m[0828 18:24:54 @registry.py:90][0m 'group1/block1/conv1': [1, 512, ?, ?] --> [1, 128, ?, ?]
+[32m[0828 18:24:54 @registry.py:90][0m 'group1/block1/conv2': [1, 128, ?, ?] --> [1, 128, ?, ?]
+[32m[0828 18:24:54 @registry.py:90][0m 'group1/block1/conv3': [1, 128, ?, ?] --> [1, 512, ?, ?]
+[32m[0828 18:24:54 @registry.py:90][0m 'group1/block2/conv1': [1, 512, ?, ?] --> [1, 128, ?, ?]
+[32m[0828 18:24:54 @registry.py:90][0m 'group1/block2/conv2': [1, 128, ?, ?] --> [1, 128, ?, ?]
+[32m[0828 18:24:54 @registry.py:90][0m 'group1/block2/conv3': [1, 128, ?, ?] --> [1, 512, ?, ?]
+[32m[0828 18:24:54 @registry.py:90][0m 'group1/block3/conv1': [1, 512, ?, ?] --> [1, 128, ?, ?]
+[32m[0828 18:24:54 @registry.py:90][0m 'group1/block3/conv2': [1, 128, ?, ?] --> [1, 128, ?, ?]
+[32m[0828 18:24:54 @registry.py:90][0m 'group1/block3/conv3': [1, 128, ?, ?] --> [1, 512, ?, ?]
+[32m[0828 18:24:54 @registry.py:90][0m 'group2/block0/conv1': [1, 512, ?, ?] --> [1, 256, ?, ?]
+[32m[0828 18:24:54 @registry.py:90][0m 'group2/block0/conv2': [1, 256, ?, ?] --> [1, 256, ?, ?]
+[32m[0828 18:24:54 @registry.py:90][0m 'group2/block0/conv3': [1, 256, ?, ?] --> [1, 1024, ?, ?]
+[32m[0828 18:24:54 @registry.py:90][0m 'group2/block0/convshortcut': [1, 512, ?, ?] --> [1, 1024, ?, ?]
+[32m[0828 18:24:54 @registry.py:90][0m 'group2/block1/conv1': [1, 1024, ?, ?] --> [1, 256, ?, ?]
+[32m[0828 18:24:54 @registry.py:90][0m 'group2/block1/conv2': [1, 256, ?, ?] --> [1, 256, ?, ?]
+[32m[0828 18:24:54 @registry.py:90][0m 'group2/block1/conv3': [1, 256, ?, ?] --> [1, 1024, ?, ?]
+[32m[0828 18:24:54 @registry.py:90][0m 'group2/block2/conv1': [1, 1024, ?, ?] --> [1, 256, ?, ?]
+[32m[0828 18:24:54 @registry.py:90][0m 'group2/block2/conv2': [1, 256, ?, ?] --> [1, 256, ?, ?]
+[32m[0828 18:24:54 @registry.py:90][0m 'group2/block2/conv3': [1, 256, ?, ?] --> [1, 1024, ?, ?]
+[32m[0828 18:24:54 @registry.py:90][0m 'group2/block3/conv1': [1, 1024, ?, ?] --> [1, 256, ?, ?]
+[32m[0828 18:24:54 @registry.py:90][0m 'group2/block3/conv2': [1, 256, ?, ?] --> [1, 256, ?, ?]
+[32m[0828 18:24:54 @registry.py:90][0m 'group2/block3/conv3': [1, 256, ?, ?] --> [1, 1024, ?, ?]
+[32m[0828 18:24:54 @registry.py:90][0m 'group2/block4/conv1': [1, 1024, ?, ?] --> [1, 256, ?, ?]
+[32m[0828 18:24:54 @registry.py:90][0m 'group2/block4/conv2': [1, 256, ?, ?] --> [1, 256, ?, ?]
+[32m[0828 18:24:54 @registry.py:90][0m 'group2/block4/conv3': [1, 256, ?, ?] --> [1, 1024, ?, ?]
+[32m[0828 18:24:54 @registry.py:90][0m 'group2/block5/conv1': [1, 1024, ?, ?] --> [1, 256, ?, ?]
+[32m[0828 18:24:54 @registry.py:90][0m 'group2/block5/conv2': [1, 256, ?, ?] --> [1, 256, ?, ?]
+[32m[0828 18:24:54 @registry.py:90][0m 'group2/block5/conv3': [1, 256, ?, ?] --> [1, 1024, ?, ?]
+[32m[0828 18:24:54 @registry.py:90][0m 'group3/block0/conv1': [1, 1024, ?, ?] --> [1, 512, ?, ?]
+[32m[0828 18:24:55 @registry.py:90][0m 'group3/block0/conv2': [1, 512, ?, ?] --> [1, 512, ?, ?]
+[32m[0828 18:24:55 @registry.py:90][0m 'group3/block0/conv3': [1, 512, ?, ?] --> [1, 2048, ?, ?]
+[32m[0828 18:24:55 @registry.py:90][0m 'group3/block0/convshortcut': [1, 1024, ?, ?] --> [1, 2048, ?, ?]
+[32m[0828 18:24:55 @registry.py:90][0m 'group3/block1/conv1': [1, 2048, ?, ?] --> [1, 512, ?, ?]
+[32m[0828 18:24:55 @registry.py:90][0m 'group3/block1/conv2': [1, 512, ?, ?] --> [1, 512, ?, ?]
+[32m[0828 18:24:55 @registry.py:90][0m 'group3/block1/conv3': [1, 512, ?, ?] --> [1, 2048, ?, ?]
+[32m[0828 18:24:55 @registry.py:90][0m 'group3/block2/conv1': [1, 2048, ?, ?] --> [1, 512, ?, ?]
+[32m[0828 18:24:55 @registry.py:90][0m 'group3/block2/conv2': [1, 512, ?, ?] --> [1, 512, ?, ?]
+[32m[0828 18:24:55 @registry.py:90][0m 'group3/block2/conv3': [1, 512, ?, ?] --> [1, 2048, ?, ?]
+[32m[0828 18:24:55 @registry.py:80][0m 'fpn' input: [1, 256, ?, ?], [1, 512, ?, ?], [1, 1024, ?, ?], [1, 2048, ?, ?]
+[32m[0828 18:24:55 @registry.py:90][0m   'fpn/lateral_1x1_c2': [1, 256, ?, ?] --> [1, 256, ?, ?]
+[32m[0828 18:24:55 @registry.py:90][0m   'fpn/lateral_1x1_c3': [1, 512, ?, ?] --> [1, 256, ?, ?]
+[32m[0828 18:24:55 @registry.py:90][0m   'fpn/lateral_1x1_c4': [1, 1024, ?, ?] --> [1, 256, ?, ?]
+[32m[0828 18:24:55 @registry.py:90][0m   'fpn/lateral_1x1_c5': [1, 2048, ?, ?] --> [1, 256, ?, ?]
+[32m[0828 18:24:55 @registry.py:90][0m   'fpn/upsample_lat5': [1, 256, ?, ?] --> [1, 256, ?, ?]
+[32m[0828 18:24:55 @registry.py:90][0m   'fpn/upsample_lat4': [1, 256, ?, ?] --> [1, 256, ?, ?]
+[32m[0828 18:24:55 @registry.py:90][0m   'fpn/upsample_lat3': [1, 256, ?, ?] --> [1, 256, ?, ?]
+[32m[0828 18:24:55 @registry.py:90][0m   'fpn/posthoc_3x3_p2': [1, 256, ?, ?] --> [1, 256, ?, ?]
+[32m[0828 18:24:55 @registry.py:90][0m   'fpn/posthoc_3x3_p3': [1, 256, ?, ?] --> [1, 256, ?, ?]
+[32m[0828 18:24:55 @registry.py:90][0m   'fpn/posthoc_3x3_p4': [1, 256, ?, ?] --> [1, 256, ?, ?]
+[32m[0828 18:24:55 @registry.py:90][0m   'fpn/posthoc_3x3_p5': [1, 256, ?, ?] --> [1, 256, ?, ?]
+[32m[0828 18:24:55 @registry.py:90][0m   'fpn/maxpool_p6': [1, 256, ?, ?] --> [1, 256, ?, ?]
+[32m[0828 18:24:55 @registry.py:93][0m 'fpn' output: [1, 256, ?, ?], [1, 256, ?, ?], [1, 256, ?, ?], [1, 256, ?, ?], [1, 256, ?, ?]
+[32m[0828 18:24:55 @registry.py:80][0m 'rpn' input: [1, 256, ?, ?]
+[32m[0828 18:24:55 @registry.py:90][0m   'rpn/conv0': [1, 256, ?, ?] --> [1, 256, ?, ?]
+[32m[0828 18:24:55 @registry.py:90][0m   'rpn/class': [1, 256, ?, ?] --> [1, 3, ?, ?]
+[32m[0828 18:24:55 @registry.py:90][0m   'rpn/box': [1, 256, ?, ?] --> [1, 12, ?, ?]
+[32m[0828 18:24:55 @registry.py:93][0m 'rpn' output: [?, ?, 3], [?, ?, 3, 4]
+[32m[0828 18:24:56 @registry.py:80][0m 'fastrcnn' input: [?, 256, 7, 7]
+[32m[0828 18:24:56 @registry.py:90][0m   'fastrcnn/fc6': [?, 256, 7, 7] --> [?, 1024]
+[32m[0828 18:24:56 @registry.py:90][0m   'fastrcnn/fc7': [?, 1024] --> [?, 1024]
+[32m[0828 18:24:56 @registry.py:93][0m 'fastrcnn' output: [?, 1024]
+[32m[0828 18:24:56 @registry.py:80][0m 'fastrcnn/outputs' input: [?, 1024]
+[32m[0828 18:24:56 @registry.py:90][0m   'fastrcnn/outputs/class': [?, 1024] --> [?, 81]
+[32m[0828 18:24:56 @registry.py:90][0m   'fastrcnn/outputs/box': [?, 1024] --> [?, 324]
+[32m[0828 18:24:56 @registry.py:93][0m 'fastrcnn/outputs' output: [?, 81], [?, 81, 4]
+[32m[0828 18:24:57 @registry.py:80][0m 'maskrcnn' input: [?, 256, 14, 14]
+[32m[0828 18:24:57 @registry.py:90][0m   'maskrcnn/fcn0': [?, 256, 14, 14] --> [?, 256, 14, 14]
+[32m[0828 18:24:57 @registry.py:90][0m   'maskrcnn/fcn1': [?, 256, 14, 14] --> [?, 256, 14, 14]
+[32m[0828 18:24:57 @registry.py:90][0m   'maskrcnn/fcn2': [?, 256, 14, 14] --> [?, 256, 14, 14]
+[32m[0828 18:24:57 @registry.py:90][0m   'maskrcnn/fcn3': [?, 256, 14, 14] --> [?, 256, 14, 14]
+[32m[0828 18:24:57 @registry.py:90][0m   'maskrcnn/deconv': [?, 256, 14, 14] --> [?, 256, 28, 28]
+[32m[0828 18:24:57 @registry.py:90][0m   'maskrcnn/conv': [?, 256, 28, 28] --> [?, 80, 28, 28]
+[32m[0828 18:24:57 @registry.py:93][0m 'maskrcnn' output: [?, 80, 28, 28]
+[32m[0828 18:24:57 @regularize.py:97][0m regularize_cost() found 63 variables to regularize.
+[32m[0828 18:24:57 @regularize.py:21][0m The following tensors will be regularized: group1/block0/conv1/W:0, group1/block0/conv2/W:0, group1/block0/conv3/W:0, group1/block0/convshortcut/W:0, group1/block1/conv1/W:0, group1/block1/conv2/W:0, group1/block1/conv3/W:0, group1/block2/conv1/W:0, group1/block2/conv2/W:0, group1/block2/conv3/W:0, group1/block3/conv1/W:0, group1/block3/conv2/W:0, group1/block3/conv3/W:0, group2/block0/conv1/W:0, group2/block0/conv2/W:0, group2/block0/conv3/W:0, group2/block0/convshortcut/W:0, group2/block1/conv1/W:0, group2/block1/conv2/W:0, group2/block1/conv3/W:0, group2/block2/conv1/W:0, group2/block2/conv2/W:0, group2/block2/conv3/W:0, group2/block3/conv1/W:0, group2/block3/conv2/W:0, group2/block3/conv3/W:0, group2/block4/conv1/W:0, group2/block4/conv2/W:0, group2/block4/conv3/W:0, group2/block5/conv1/W:0, group2/block5/conv2/W:0, group2/block5/conv3/W:0, group3/block0/conv1/W:0, group3/block0/conv2/W:0, group3/block0/conv3/W:0, group3/block0/convshortcut/W:0, group3/block1/conv1/W:0, group3/block1/conv2/W:0, group3/block1/conv3/W:0, group3/block2/conv1/W:0, group3/block2/conv2/W:0, group3/block2/conv3/W:0, fpn/lateral_1x1_c2/W:0, fpn/lateral_1x1_c3/W:0, fpn/lateral_1x1_c4/W:0, fpn/lateral_1x1_c5/W:0, fpn/posthoc_3x3_p2/W:0, fpn/posthoc_3x3_p3/W:0, fpn/posthoc_3x3_p4/W:0, fpn/posthoc_3x3_p5/W:0, rpn/conv0/W:0, rpn/class/W:0, rpn/box/W:0, fastrcnn/fc6/W:0, fastrcnn/fc7/W:0, fastrcnn/outputs/class/W:0, fastrcnn/outputs/box/W:0, maskrcnn/fcn0/W:0, maskrcnn/fcn1/W:0, maskrcnn/fcn2/W:0, maskrcnn/fcn3/W:0, maskrcnn/deconv/W:0, maskrcnn/conv/W:0
+[32m[0828 18:25:00 @model_utils.py:67][0m [36mList of Trainable Variables: 
+[0mname                                 shape                 #elements
+-----------------------------------  ------------------  -----------
+group1/block0/conv1/W                [1, 1, 256, 128]          32768
+group1/block0/conv1/bn/gamma         [128]                       128
+group1/block0/conv1/bn/beta          [128]                       128
+group1/block0/conv2/W                [3, 3, 128, 128]         147456
+group1/block0/conv2/bn/gamma         [128]                       128
+group1/block0/conv2/bn/beta          [128]                       128
+group1/block0/conv3/W                [1, 1, 128, 512]          65536
+group1/block0/conv3/bn/gamma         [512]                       512
+group1/block0/conv3/bn/beta          [512]                       512
+group1/block0/convshortcut/W         [1, 1, 256, 512]         131072
+group1/block0/convshortcut/bn/gamma  [512]                       512
+group1/block0/convshortcut/bn/beta   [512]                       512
+group1/block1/conv1/W                [1, 1, 512, 128]          65536
+group1/block1/conv1/bn/gamma         [128]                       128
+group1/block1/conv1/bn/beta          [128]                       128
+group1/block1/conv2/W                [3, 3, 128, 128]         147456
+group1/block1/conv2/bn/gamma         [128]                       128
+group1/block1/conv2/bn/beta          [128]                       128
+group1/block1/conv3/W                [1, 1, 128, 512]          65536
+group1/block1/conv3/bn/gamma         [512]                       512
+group1/block1/conv3/bn/beta          [512]                       512
+group1/block2/conv1/W                [1, 1, 512, 128]          65536
+group1/block2/conv1/bn/gamma         [128]                       128
+group1/block2/conv1/bn/beta          [128]                       128
+group1/block2/conv2/W                [3, 3, 128, 128]         147456
+group1/block2/conv2/bn/gamma         [128]                       128
+group1/block2/conv2/bn/beta          [128]                       128
+group1/block2/conv3/W                [1, 1, 128, 512]          65536
+group1/block2/conv3/bn/gamma         [512]                       512
+group1/block2/conv3/bn/beta          [512]                       512
+group1/block3/conv1/W                [1, 1, 512, 128]          65536
+group1/block3/conv1/bn/gamma         [128]                       128
+group1/block3/conv1/bn/beta          [128]                       128
+group1/block3/conv2/W                [3, 3, 128, 128]         147456
+group1/block3/conv2/bn/gamma         [128]                       128
+group1/block3/conv2/bn/beta          [128]                       128
+group1/block3/conv3/W                [1, 1, 128, 512]          65536
+group1/block3/conv3/bn/gamma         [512]                       512
+group1/block3/conv3/bn/beta          [512]                       512
+group2/block0/conv1/W                [1, 1, 512, 256]         131072
+group2/block0/conv1/bn/gamma         [256]                       256
+group2/block0/conv1/bn/beta          [256]                       256
+group2/block0/conv2/W                [3, 3, 256, 256]         589824
+group2/block0/conv2/bn/gamma         [256]                       256
+group2/block0/conv2/bn/beta          [256]                       256
+group2/block0/conv3/W                [1, 1, 256, 1024]        262144
+group2/block0/conv3/bn/gamma         [1024]                     1024
+group2/block0/conv3/bn/beta          [1024]                     1024
+group2/block0/convshortcut/W         [1, 1, 512, 1024]        524288
+group2/block0/convshortcut/bn/gamma  [1024]                     1024
+group2/block0/convshortcut/bn/beta   [1024]                     1024
+group2/block1/conv1/W                [1, 1, 1024, 256]        262144
+group2/block1/conv1/bn/gamma         [256]                       256
+group2/block1/conv1/bn/beta          [256]                       256
+group2/block1/conv2/W                [3, 3, 256, 256]         589824
+group2/block1/conv2/bn/gamma         [256]                       256
+group2/block1/conv2/bn/beta          [256]                       256
+group2/block1/conv3/W                [1, 1, 256, 1024]        262144
+group2/block1/conv3/bn/gamma         [1024]                     1024
+group2/block1/conv3/bn/beta          [1024]                     1024
+group2/block2/conv1/W                [1, 1, 1024, 256]        262144
+group2/block2/conv1/bn/gamma         [256]                       256
+group2/block2/conv1/bn/beta          [256]                       256
+group2/block2/conv2/W                [3, 3, 256, 256]         589824
+group2/block2/conv2/bn/gamma         [256]                       256
+group2/block2/conv2/bn/beta          [256]                       256
+group2/block2/conv3/W                [1, 1, 256, 1024]        262144
+group2/block2/conv3/bn/gamma         [1024]                     1024
+group2/block2/conv3/bn/beta          [1024]                     1024
+group2/block3/conv1/W                [1, 1, 1024, 256]        262144
+group2/block3/conv1/bn/gamma         [256]                       256
+group2/block3/conv1/bn/beta          [256]                       256
+group2/block3/conv2/W                [3, 3, 256, 256]         589824
+group2/block3/conv2/bn/gamma         [256]                       256
+group2/block3/conv2/bn/beta          [256]                       256
+group2/block3/conv3/W                [1, 1, 256, 1024]        262144
+group2/block3/conv3/bn/gamma         [1024]                     1024
+group2/block3/conv3/bn/beta          [1024]                     1024
+group2/block4/conv1/W                [1, 1, 1024, 256]        262144
+group2/block4/conv1/bn/gamma         [256]                       256
+group2/block4/conv1/bn/beta          [256]                       256
+group2/block4/conv2/W                [3, 3, 256, 256]         589824
+group2/block4/conv2/bn/gamma         [256]                       256
+group2/block4/conv2/bn/beta          [256]                       256
+group2/block4/conv3/W                [1, 1, 256, 1024]        262144
+group2/block4/conv3/bn/gamma         [1024]                     1024
+group2/block4/conv3/bn/beta          [1024]                     1024
+group2/block5/conv1/W                [1, 1, 1024, 256]        262144
+group2/block5/conv1/bn/gamma         [256]                       256
+group2/block5/conv1/bn/beta          [256]                       256
+group2/block5/conv2/W                [3, 3, 256, 256]         589824
+group2/block5/conv2/bn/gamma         [256]                       256
+group2/block5/conv2/bn/beta          [256]                       256
+group2/block5/conv3/W                [1, 1, 256, 1024]        262144
+group2/block5/conv3/bn/gamma         [1024]                     1024
+group2/block5/conv3/bn/beta          [1024]                     1024
+group3/block0/conv1/W                [1, 1, 1024, 512]        524288
+group3/block0/conv1/bn/gamma         [512]                       512
+group3/block0/conv1/bn/beta          [512]                       512
+group3/block0/conv2/W                [3, 3, 512, 512]        2359296
+group3/block0/conv2/bn/gamma         [512]                       512
+group3/block0/conv2/bn/beta          [512]                       512
+group3/block0/conv3/W                [1, 1, 512, 2048]       1048576
+group3/block0/conv3/bn/gamma         [2048]                     2048
+group3/block0/conv3/bn/beta          [2048]                     2048
+group3/block0/convshortcut/W         [1, 1, 1024, 2048]      2097152
+group3/block0/convshortcut/bn/gamma  [2048]                     2048
+group3/block0/convshortcut/bn/beta   [2048]                     2048
+group3/block1/conv1/W                [1, 1, 2048, 512]       1048576
+group3/block1/conv1/bn/gamma         [512]                       512
+group3/block1/conv1/bn/beta          [512]                       512
+group3/block1/conv2/W                [3, 3, 512, 512]        2359296
+group3/block1/conv2/bn/gamma         [512]                       512
+group3/block1/conv2/bn/beta          [512]                       512
+group3/block1/conv3/W                [1, 1, 512, 2048]       1048576
+group3/block1/conv3/bn/gamma         [2048]                     2048
+group3/block1/conv3/bn/beta          [2048]                     2048
+group3/block2/conv1/W                [1, 1, 2048, 512]       1048576
+group3/block2/conv1/bn/gamma         [512]                       512
+group3/block2/conv1/bn/beta          [512]                       512
+group3/block2/conv2/W                [3, 3, 512, 512]        2359296
+group3/block2/conv2/bn/gamma         [512]                       512
+group3/block2/conv2/bn/beta          [512]                       512
+group3/block2/conv3/W                [1, 1, 512, 2048]       1048576
+group3/block2/conv3/bn/gamma         [2048]                     2048
+group3/block2/conv3/bn/beta          [2048]                     2048
+fpn/lateral_1x1_c2/W                 [1, 1, 256, 256]          65536
+fpn/lateral_1x1_c2/b                 [256]                       256
+fpn/lateral_1x1_c3/W                 [1, 1, 512, 256]         131072
+fpn/lateral_1x1_c3/b                 [256]                       256
+fpn/lateral_1x1_c4/W                 [1, 1, 1024, 256]        262144
+fpn/lateral_1x1_c4/b                 [256]                       256
+fpn/lateral_1x1_c5/W                 [1, 1, 2048, 256]        524288
+fpn/lateral_1x1_c5/b                 [256]                       256
+fpn/posthoc_3x3_p2/W                 [3, 3, 256, 256]         589824
+fpn/posthoc_3x3_p2/b                 [256]                       256
+fpn/posthoc_3x3_p3/W                 [3, 3, 256, 256]         589824
+fpn/posthoc_3x3_p3/b                 [256]                       256
+fpn/posthoc_3x3_p4/W                 [3, 3, 256, 256]         589824
+fpn/posthoc_3x3_p4/b                 [256]                       256
+fpn/posthoc_3x3_p5/W                 [3, 3, 256, 256]         589824
+fpn/posthoc_3x3_p5/b                 [256]                       256
+rpn/conv0/W                          [3, 3, 256, 256]         589824
+rpn/conv0/b                          [256]                       256
+rpn/class/W                          [1, 1, 256, 3]              768
+rpn/class/b                          [3]                           3
+rpn/box/W                            [1, 1, 256, 12]            3072
+rpn/box/b                            [12]                         12
+fastrcnn/fc6/W                       [12544, 1024]          12845056
+fastrcnn/fc6/b                       [1024]                     1024
+fastrcnn/fc7/W                       [1024, 1024]            1048576
+fastrcnn/fc7/b                       [1024]                     1024
+fastrcnn/outputs/class/W             [1024, 81]                82944
+fastrcnn/outputs/class/b             [81]                         81
+fastrcnn/outputs/box/W               [1024, 324]              331776
+fastrcnn/outputs/box/b               [324]                       324
+maskrcnn/fcn0/W                      [3, 3, 256, 256]         589824
+maskrcnn/fcn0/b                      [256]                       256
+maskrcnn/fcn1/W                      [3, 3, 256, 256]         589824
+maskrcnn/fcn1/b                      [256]                       256
+maskrcnn/fcn2/W                      [3, 3, 256, 256]         589824
+maskrcnn/fcn2/b                      [256]                       256
+maskrcnn/fcn3/W                      [3, 3, 256, 256]         589824
+maskrcnn/fcn3/b                      [256]                       256
+maskrcnn/deconv/W                    [2, 2, 256, 256]         262144
+maskrcnn/deconv/b                    [256]                       256
+maskrcnn/conv/W                      [1, 1, 256, 80]           20480
+maskrcnn/conv/b                      [80]                         80[36m
+Number of trainable variables: 168
+Number of parameters (elements): 44175092
+Storage space needed for all trainable variables: 168.51MB[0m
+[32m[0828 18:25:00 @base.py:207][0m Setup callbacks graph ...
+[32m[0828 18:25:03 @prof.py:299][0m [HostMemoryTracker] Free RAM in setup_graph() is 9.08 GB.
+[32m[0828 18:25:03 @tower.py:135][0m Building graph for predict tower 'tower-pred-0' on device /gpu:0 ...
+[32m[0828 18:25:05 @collection.py:152][0m Size of these collections were changed in tower-pred-0: (tf.GraphKeys.MODEL_VARIABLES: 161->194)
+[32m[0828 18:25:05 @coco.py:62][0m Instances loaded from /home/jyan/tmp/coco/annotations/instances_val2017.json.
+[32m[0828 18:25:05 @timer.py:45][0m Load annotations for instances_val2017.json finished, time:0.0241 sec.
+[32m[0828 18:25:05 @data.py:382][0m Found 0 images for inference.
+[32m[0828 18:25:05 @coco.py:62][0m Instances loaded from /home/jyan/tmp/coco/annotations/instances_val2017.json.
+[32m[0828 18:25:05 @timer.py:45][0m Load annotations for instances_val2017.json finished, time:0.0227 sec.
+[32m[0828 18:25:06 @data.py:382][0m Found 0 images for inference.
+[32m[0828 18:25:06 @summary.py:47][0m [MovingAverageSummary] 78 operations in collection 'MOVING_SUMMARY_OPS' will be run with session hooks.
+[32m[0828 18:25:06 @summary.py:94][0m Summarizing collection 'summaries' of size 81.
+[32m[0828 18:25:06 @base.py:228][0m Creating the session ...
